@@ -1,0 +1,43 @@
+//- _navbar.pug
+nav
+  .logo-name
+    .logo-image
+      img(src="images/logo.png", alt="")
+    span.logo_name Organizer
+  .menu-items
+    ul.nav-links
+      li
+        a(href="")
+          i(class="uil uil-estate")
+          span.link-name Dashboard
+      li
+        a(href="tareas")
+          i(class="uil uil-files-landscapes")
+          span.link-name Tasks
+      li
+        a(href="#")
+          i(class="uil uil-chart")
+          span.link-name Analytics
+      li
+        a(href="#")
+          i(class="uil uil-thumbs-up")
+          span.link-name Like
+      li
+        a(href="#")
+          i(class="uil uil-comments")
+          span.link-name Comment
+      li
+        a(href="#")
+          i(class="uil uil-share")
+          span.link-name Share
+    ul.logout-mode
+      li
+        a(href="#")
+          i(class="uil uil-signout")
+          span.link-name Logout
+      li.mode
+        a(href="#")
+          i(class="uil uil-moon")
+          span.link-name Dark Mode
+        .mode-toggle
+          span.switch

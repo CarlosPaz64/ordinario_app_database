@@ -1,0 +1,161 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    
+    link(rel="stylesheet", href="/css/dashboard.css")
+    link(rel="stylesheet", href="https://unicons.iconscout.com/release/v4.0.0/css/line.css")
+    
+    title Dashboard
+  body
+    nav
+      .logo-name
+        .logo-image
+          img(src="images/logo.png", alt="")
+        span.logo_name Organizer
+      .menu-items
+        ul.nav-links
+          li
+            a(href="")
+              i(class="uil uil-estate")
+              span.link-name Dashboard
+          li
+            a(href="tareas")
+              i(class="uil uil-files-landscapes")
+              span.link-name Tasks
+          li
+            a(href="#")
+              i(class="uil uil-chart")
+              span.link-name Analytics
+          li
+            a(href="#")
+              i(class="uil uil-thumbs-up")
+              span.link-name Like
+          li
+            a(href="#")
+              i(class="uil uil-comments")
+              span.link-name Comment
+          li
+            a(href="#")
+              i(class="uil uil-share")
+              span.link-name Share
+        ul.logout-mode
+          li
+            a(href="#")
+              i(class="uil uil-signout")
+              span.link-name Logout
+          li.mode
+            a(href="#")
+              i(class="uil uil-moon")
+              span.link-name Dark Mode
+            .mode-toggle
+              span.switch
+    section.dashboard
+      .top
+        i(class="uil uil-bars sidebar-toggle")
+        .search-box
+          i(class="uil uil-search")
+          input(type="text", placeholder="Search here...")
+      .dash-content
+        .overview
+          .title
+            i(class="uil uil-tachometer-fast-alt")
+            span.text Dashboard
+          .boxes
+            .box.box1
+              i(class="uil uil-thumbs-up")
+              span.text Total Likes
+              span.number 50,120
+            .box.box2
+              i(class="uil uil-comments")
+              span.text Comments
+              span.number 20,120
+            .box.box3
+              i(class="uil uil-share")
+              span.text Total Share
+              span.number 10,120
+        .activity
+          .title
+            i(class="uil uil-clock-three")
+            span.text Recent Activity
+          .activity-data
+            .data.names
+              span.data-title Name
+              span.data-list Prem Shahi
+              span.data-list Deepa Chand
+              span.data-list Manisha Chand
+              span.data-list Pratima Shahi
+              span.data-list Man Shahi
+              span.data-list Ganesh Chand
+              span.data-list Bikash Chand
+            .data.email
+              span.data-title Email
+              span.data-list premshahi@gmail.com
+              span.data-list deepachand@gmail.com
+              span.data-list prakashhai@gmail.com
+              span.data-list manishachand@gmail.com
+              span.data-list pratimashhai@gmail.com
+              span.data-list manshahi@gmail.com
+              span.data-list ganeshchand@gmail.com
+            .data.joined
+              span.data-title Joined
+              span.data-list 2022-02-12
+              span.data-list 2022-02-12
+              span.data-list 2022-02-13
+              span.data-list 2022-02-13
+              span.data-list 2022-02-14
+              span.data-list 2022-02-14
+              span.data-list 2022-02-15
+            .data.type
+              span.data-title Type
+              span.data-list New
+              span.data-list Member
+              span.data-list Member
+              span.data-list New
+              span.data-list Member
+              span.data-list New
+              span.data-list Member
+            .data.status
+              span.data-title Status
+              span.data-list Liked
+              span.data-list Liked
+              span.data-list Liked
+              span.data-list Liked
+              span.data-list Liked
+              span.data-list Liked
+              span.data-list Liked
+    script.
+      const body = document.querySelector("body"),
+            modeToggle = body.querySelector(".mode-toggle");
+            sidebar = body.querySelector("nav");
+            sidebarToggle = body.querySelector(".sidebar-toggle");
+      
+      let getMode = localStorage.getItem("mode");
+      if(getMode && getMode ==="dark"){
+          body.classList.toggle("dark");
+      }
+      
+      let getStatus = localStorage.getItem("status");
+      if(getStatus && getStatus ==="close"){
+          sidebar.classList.toggle("close");
+      }
+      
+      modeToggle.addEventListener("click", () =>{
+          body.classList.toggle("dark");
+          if(body.classList.contains("dark")){
+              localStorage.setItem("mode", "dark");
+          }else{
+              localStorage.setItem("mode", "light");
+          }
+      });
+      
+      sidebarToggle.addEventListener("click", () => {
+          sidebar.classList.toggle("close");
+          if(sidebar.classList.contains("close")){
+              localStorage.setItem("status", "close");
+          }else{
+              localStorage.setItem("status", "open");
+          }
+      });

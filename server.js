@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
+const pool = require('./database/database');
 
 // Configura DotEnv
 dotenv.config();
@@ -16,6 +17,11 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
+app.get('/tareas', (req, res) => {
+  res.render('tasks');
+});
+
 app.get('/register', (req, res) => {
     res.render('register');
   });
@@ -25,7 +31,7 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.render('dashboard');
+    res.render('index');
   });
 // Manejo de errores
 app.use((err, req, res, next) => {
