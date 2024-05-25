@@ -18,8 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-app.get('/tareas', (req, res) => {
-  res.render('tasks');
+app.get('/content', (req, res) => {
+  res.render('content');
 });
 
 app.get('/register', (req, res) => {
