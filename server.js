@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
 const pool = require('./database/database');
+const registerRouter = require('./routes/register'); // Importa la ruta de registro
 
 // Configura DotEnv
 dotenv.config();
@@ -17,22 +18,22 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Rutas
+app.use('/register', registerRouter); // Usa la ruta de registro
 
+// Rutas existentes
 app.get('/content', (req, res) => {
   res.render('content');
 });
-
-app.get('/register', (req, res) => {
-    res.render('register');
-  });
 
 app.get('/login', (req, res) => {
   res.render('login');
 });
 
 app.get('/', (req, res) => {
-    res.render('index');
-  });
+  res.render('index');
+});
+
 // Manejo de errores
 app.use((err, req, res, next) => {
   console.error(err.stack);
