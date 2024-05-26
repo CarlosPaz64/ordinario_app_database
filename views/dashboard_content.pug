@@ -28,8 +28,8 @@ section.dashboard
                   button.task__options
                     i.fas.fa-ellipsis-h
                   .options-menu
-                    button.option-btn Editar
-                    button.option-btn Eliminar
+                    button.option-btn.edit-btn(data-task-id=task.id) Editar
+                    button.option-btn.delete-btn(data-task-id=task.id) Eliminar
                 p= task.descripcion
                 .task__stats
                   span
@@ -50,8 +50,8 @@ section.dashboard
                   button.task__options
                     i.fas.fa-ellipsis-h
                   .options-menu
-                    button.option-btn Editar
-                    button.option-btn Eliminar
+                    button.option-btn.edit-btn(data-task-id=task.id) Editar
+                    button.option-btn.delete-btn(data-task-id=task.id) Eliminar
                 p= task.descripcion
                 .task__stats
                   span
@@ -72,8 +72,8 @@ section.dashboard
                   button.task__options
                     i.fas.fa-ellipsis-h
                   .options-menu
-                    button.option-btn Editar
-                    button.option-btn Eliminar
+                    button.option-btn.edit-btn(data-task-id=task.id) Editar
+                    button.option-btn.delete-btn(data-task-id=task.id) Eliminar
                 p= task.descripcion
                 .task__stats
                   span
@@ -86,7 +86,8 @@ section.dashboard
   .modal-content
     span.closing &times;
     p Add a task:
-    form(action="/create-task", method="post")
+    form(id="task-form", action="/create-task", method="post")
+      input(type="hidden", id="task-id", name="id")
       label(for="descripcion") Description:
       textarea(placeholder="Description", maxlength="100", name="descripcion" required)
       br

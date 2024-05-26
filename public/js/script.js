@@ -152,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// Deslogueo de la aplicación mediante una API Fetch
 document.getElementById('logout-link').addEventListener('click', function(event) {
   event.preventDefault();
   fetch('/logout', {
@@ -196,7 +197,7 @@ const currentDate = `${year}-${month}-${day}`;
 // Establece la fecha mínima como la fecha actual
 inputDate.setAttribute('min', currentDate);
 
-
+// Sobrepone una línea para marcar como Done la tarea (falta funcionalidad en la base de datos)
 document.addEventListener('DOMContentLoaded', function() {
   // Obtiene todos los botones con el icono de check
   var checkButtons = document.querySelectorAll('.fas.fa-check');
@@ -209,4 +210,73 @@ document.addEventListener('DOMContentLoaded', function() {
       taskElement.classList.toggle('checked');
     });
   });
+});
+
+// Script para eliminar la tarea o editar una tarea
+document.addEventListener('DOMContentLoaded', function() {
+  var deleteButtons = document.querySelectorAll('.delete-btn');
+  var editButtons = document.querySelectorAll('.edit-btn');
+  var modal = document.getElementById('myModal');
+  var closeBtn = modal.querySelector('.closing');
+  var form = document.getElementById('task-form');
+
+  deleteButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      var taskId = this.getAttribute('data-task-id');
+      if (confirm('Are you sure you want to delete this task?')) {
+        fetch(`/tasks/${taskId}`, {
+          method: 'DELETE'
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            return response.json().then(data => {
+              throw new Error(data.error);
+            });
+          }
+        })
+        .then(data => {
+          console.log(data.message);
+          var taskElement = this.closest('.task');
+          taskElement.remove();
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error deleting task: ' + error.message);
+        });
+      }
+    });
+  });
+
+  editButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      var taskId = this.getAttribute('data-task-id');
+      fetch(`/tasks/${taskId}`)
+        .then(response => response.json())
+        .then(task => {
+          document.getElementById('task-id').value = task.id;
+          document.getElementById('task-descripcion').value = task.descripcion;
+          document.getElementById('fecha_finalizacion').value = task.fecha_finalizacion;
+          document.getElementById('task-importancia').value = task.importancia;
+          form.action = `/tasks/update-task/${task.id}`;
+          form.method = 'PUT';
+          modal.style.display = "block";
+        })
+        .catch(error => {
+          console.error('Error fetching task:', error);
+          alert('Error fetching task: ' + error.message);
+        });
+    });
+  });
+
+  closeBtn.addEventListener('click', function() {
+    modal.style.display = "none";
+  });
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
 });

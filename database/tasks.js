@@ -36,6 +36,16 @@ async function updateTask(id, descripcion, estatus, fecha_finalizacion, importan
     }
 }
 
+// Función que llama a las tasks por su ID
+async function getTaskById(id) {
+    try {
+        const [rows] = await pool.query('SELECT * FROM tasks WHERE id = ?', [id]);
+        return rows[0]; // Asume que ID es único y devuelve la primera coincidencia
+    } catch (error) {
+        throw error; // Lanza el error para manejarlo en el servidor
+    }
+}
+
 // Función para actualizar el estatus de una tarea a 'Done'
 async function markTaskAsDone(id) {
     try {
@@ -61,5 +71,6 @@ module.exports = {
     getTasksByUserId,
     updateTask,
     markTaskAsDone,
-    deleteTask
+    deleteTask,
+    getTaskById
 };

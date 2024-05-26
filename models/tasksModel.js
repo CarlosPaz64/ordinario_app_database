@@ -1,7 +1,8 @@
-const { updateTask, markTaskAsDone, deleteTask } = require('../database/tasks');
+const { updateTask, markTaskAsDone, deleteTask, getTaskById } = require('../database/tasks');
 
 module.exports = {
     updateTask,
     markTaskAsDone,
-    deleteTask
+    deleteTask,
+    getTaskById
 };

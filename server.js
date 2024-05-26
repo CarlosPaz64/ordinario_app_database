@@ -8,8 +8,8 @@ const createTaskRoute = require('./routes/create-task'); // Importa la ruta para
 const registerRouter = require('./routes/register'); // Importa la ruta de registro
 const loginRoute = require('./routes/login'); // Importa la ruta del login
 const logoutRoute = require('./routes/logout'); // Importa la ruta de logout
+const tasksRoute = require('./routes/actionsTasks'); // Importa la ruta de las acciones con las tareas
 const { getTasksByUserId } = require('./database/tasks'); // Importa la función para obtener los usuarios
-const { markTaskAsDone } = require('./controllers/tasksController'); // Importa el controlador para cambiar el estatus
 const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware'); // Importa los middlewares
 
 // Configura DotEnv
@@ -39,6 +39,7 @@ app.use('/register', checkNotAuthenticated, registerRouter); // Usa la ruta de r
 app.use('/login', checkNotAuthenticated, loginRoute); // Usa la ruta del login
 app.use('/logout', checkAuthenticated, logoutRoute); // Usa la ruta del logout
 app.use('/create-task', checkAuthenticated, createTaskRoute); // Usa la ruta del create-task
+app.use('/tasks', checkAuthenticated, tasksRoute); // Usa la ruta para eliminar o editar la tarea 
 
 // Rutas existentes protegidas
 app.get('/content', checkAuthenticated, async (req, res) => {
