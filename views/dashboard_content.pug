@@ -95,17 +95,18 @@ section.dashboard
   .modal-content
     span.closing &times;
     p Add a task:
-    form(action="", method="post")
-      textarea(placeholder="Descripcion", maxlength="20")
+    form(action="/create-task", method="post")
+      label(for="descripcion") Description:
+      textarea(placeholder="Description", maxlength="100", name="descripcion" required)
+      br
       label(for="fecha") Due to:
+      input(type="date", id="fecha_finalizacion", name="fecha_finalizacion" required)
       br
-      input(type="date")
-      br
-      label Select priority:
-      br
-      select
+      label(for="importancia") Select priority:
+      select(name="importancia" required)
         option(value="critical") Critical
         option(value="important") Important
         option(value="optional") Optional
       br
-      button(type="submit") Do it!
+      button(type="submit") Add Task 
+

@@ -171,3 +171,27 @@ document.getElementById('logout-link').addEventListener('click', function(event)
     alert('Error al cerrar sesión');
   });
 });
+// Obtiene el elemento input de tipo date
+const inputDate = document.getElementById('fecha_finalizacion');
+
+// Obtiene la fecha actual en formato yyyy-mm-dd
+const today = new Date();
+
+// Formatea la fecha actual en formato yyyy-mm-dd
+const year = today.getFullYear();
+let month = today.getMonth() + 1;
+let day = today.getDate();
+
+// Agrega un cero delante si el mes o el día son menores que 10
+if (month < 10) {
+  month = '0' + month;
+}
+if (day < 10) {
+  day = '0' + day;
+}
+
+// Obtiene la fecha actual en formato yyyy-mm-dd
+const currentDate = `${year}-${month}-${day}`;
+
+// Establece la fecha mínima como la fecha actual
+inputDate.setAttribute('min', currentDate);
