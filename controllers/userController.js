@@ -26,24 +26,37 @@ async function loginUser(req, res) {
     try {
         const user = await userModel.findUserByEmail(correo);
         if (!user) {
-            res.status(404).send('Usuario no encontrado');
-            return;
+            console.log('Usuario no encontrado');
+            return res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
         }
-        // Compara la contraseña ingresada con la contraseña almacenada hasheada
         const passwordMatch = await bcrypt.compare(contrasenia, user.contrasenia_hashed);
         if (!passwordMatch) {
-            res.status(401).send('Credenciales inválidas');
-            return;
+            console.log('Contraseña incorrecta');
+            return res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
         }
-        res.status(200).send(`Bienvenido, ${user.nombre} ${user.apellidos}`);
+        req.session.userId = user.id;
+        console.log('Usuario autenticado:', user.id);
+        res.redirect('/');
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al buscar usuario');
+        console.error('Error durante el proceso de inicio de sesión:', error);
+        res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
     }
+}
+
+
+
+function logoutUser(req, res) {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send('Error al cerrar sesión');
+        }
+        res.redirect('/login');
+    });
 }
 
 module.exports = {
     register,
-    loginUser
+    loginUser,
+    logoutUser
     // Agrega otras funciones aquí según sea necesario
 };

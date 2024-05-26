@@ -23,10 +23,18 @@ async function findUserByEmail(correo) {
     }
 }
 
-// Otras funciones relacionadas con la autenticación de usuarios
+// Función para buscar un usuario por su ID
+async function findUserById(userId) {
+    try {
+        const [result, fields] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+        return result[0]; // Retorna el primer usuario encontrado (si existe)
+    } catch (error) {
+        throw error; // Lanza el error para manejarlo en el servidor
+    }
+}
 
 module.exports = {
     registerUser,
-    findUserByEmail
-    // Agrega otras funciones aquí según sea necesario
+    findUserByEmail,
+    findUserById
 };

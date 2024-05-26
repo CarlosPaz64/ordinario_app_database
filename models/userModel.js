@@ -1,7 +1,7 @@
-const { registerUser, findUserByEmail } = require('../database/user');
+const { registerUser, findUserByEmail, findUserById } = require('../database/user');
 
 module.exports = {
     registerUser,
-    findUserByEmail
-    // Agrega otras funciones aquí según sea necesario
+    findUserByEmail,
+    findUserById
 };

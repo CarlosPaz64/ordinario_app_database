@@ -151,3 +151,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+document.getElementById('logout-link').addEventListener('click', function(event) {
+  event.preventDefault();
+  fetch('/logout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  }).then(response => {
+    if (response.ok) {
+      window.location.href = '/login';
+    } else {
+      alert('Error al cerrar sesión');
+    }
+  }).catch(error => {
+    console.error('Error al cerrar sesión:', error);
+    alert('Error al cerrar sesión');
+  });
+});

@@ -3,16 +3,18 @@ html(lang="en" dir="ltr")
   head
     meta(charset="UTF-8")
     meta(name="viewport" content="width=device-width, initial-scale=1.0")
-    title Registration or Sign Up form in HTML CSS | CodingLab
+    title Login
     link(rel="stylesheet" href="/css/login.css")
   body
     .wrapper
       h2 Login
-      form(action="/index.html")
+      form(action="/login" method="POST")
+        if error
+          p.error= error
         .input-box
-          input(type="email" placeholder="Email" required)
+          input(type="email" name="correo" placeholder="Email" required)
         .input-box
-          input(type="password" placeholder="Password" required)
+          input(type="password" name="contrasenia" placeholder="Password" required)
         .input-box.button
           input(type="submit" value="Login")
         .text
