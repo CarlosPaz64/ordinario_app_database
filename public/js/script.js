@@ -195,3 +195,18 @@ const currentDate = `${year}-${month}-${day}`;
 
 // Establece la fecha mínima como la fecha actual
 inputDate.setAttribute('min', currentDate);
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Obtiene todos los botones con el icono de check
+  var checkButtons = document.querySelectorAll('.fas.fa-check');
+
+  checkButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      // Encuentra el contenedor de la tarea (elemento .task)
+      var taskElement = this.closest('.task');
+      // Alterna la clase 'checked' en el contenedor de la tarea
+      taskElement.classList.toggle('checked');
+    });
+  });
+});
