@@ -3,10 +3,12 @@ const path = require('path');
 const dotenv = require('dotenv');
 const session = require('express-session');
 const pool = require('./database/database'); // Importa la base de datos
-const userModel = require('./models/userModel')
+const userModel = require('./models/userModel') // Importa el modelo de los usuarios
+const createTaskRoute = require('./routes/create-task'); // Importa la ruta para la creación de tareas
 const registerRouter = require('./routes/register'); // Importa la ruta de registro
 const loginRoute = require('./routes/login'); // Importa la ruta del login
 const logoutRoute = require('./routes/logout'); // Importa la ruta de logout
+const { getTasksByUserId } = require('./database/tasks'); // Importa la función para obtener los usuarios
 const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware'); // Importa los middlewares
 
 // Configura DotEnv
@@ -35,10 +37,18 @@ app.use(express.json());
 app.use('/register', checkNotAuthenticated, registerRouter); // Usa la ruta de registro
 app.use('/login', checkNotAuthenticated, loginRoute); // Usa la ruta del login
 app.use('/logout', checkAuthenticated, logoutRoute); // Usa la ruta del logout
+app.use('/create-task', checkAuthenticated, createTaskRoute); // Usa la ruta del create-task
 
 // Rutas existentes protegidas
-app.get('/content', checkAuthenticated, (req, res) => {
-    res.render('content');
+app.get('/content', checkAuthenticated, async (req, res) => {
+  const userId = req.session.userId;
+  try {
+      const tasks = await getTasksByUserId(userId);
+      res.render('content', { tasks });
+  } catch (error) {
+      console.error('Error al obtener las tareas:', error);
+      res.render('content', { tasks: [], error: 'Error al obtener las tareas' });
+  }
 });
 
 app.get('/', checkAuthenticated, async (req, res) => {

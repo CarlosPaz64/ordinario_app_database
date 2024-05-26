@@ -9,6 +9,8 @@ section.dashboard
     main.project
       .project-info
         h1 All your tasks
+        if error
+          p.error= error
         .project-participants
           // Botón para abrir el modal view
           button.project-participants__add#myBtn Add Participant
@@ -18,78 +20,67 @@ section.dashboard
           .project-column-heading
             h2.project-column-heading__title To do
 
-          // Tarjeta de To do
-          .task(draggable="true")
-            .task__tags
-              span.task__tag.task__tag--critical Critical
-              button.task__options
-                i.fas.fa-ellipsis-h
-              .options-menu
-                button.option-btn Editar
-                button.option-btn Eliminar
-            p Esta es mi tarea
-            .task__stats
-              span
-                time(datetime="2021-11-24T20:00:00")
-                  i.fas.fa-flag Nov 24
-              span.task__owner
-                i.fas.fa-check
-
-          .task(draggable="true")
-            .task__tags
-              span.task__tag.task__tag--critical Critical
-              button.task__options
-                i.fas.fa-ellipsis-h
-              .options-menu
-                button.option-btn Editar
-                button.option-btn Eliminar
-            p Konsep hero title yang menarik
-            .task__stats
-              span
-                time(datetime="2021-11-24T20:00:00")
-                  i.fas.fa-flag Nov 24
-              span.task__owner
-                i.fas.fa-check
+          each task in tasks
+            if task.estatus === 'To do'
+              .task(draggable="true")
+                .task__tags
+                  span.task__tag(class="task__tag--" + task.importancia)= task.importancia
+                  button.task__options
+                    i.fas.fa-ellipsis-h
+                  .options-menu
+                    button.option-btn Editar
+                    button.option-btn Eliminar
+                p= task.descripcion
+                .task__stats
+                  span
+                    time(datetime=task.fecha_finalizacion)
+                      i.fas.fa-flag #{task.fecha_finalizacion}
+                  span.task__owner
+                    i.fas.fa-check
 
         .project-column
           .project-column-heading
             h2.project-column-heading__title Doing
 
-          .task(draggable="true")
-            .task__tags
-              span.task__tag.task__tag--important Important
-              button.task__options
-                i.fas.fa-ellipsis-h
-              .options-menu
-                button.option-btn Editar
-                button.option-btn Eliminar
-            p Replace lorem ipsum text in the final designs
-            .task__stats
-              span
-                time(datetime="2021-11-24T20:00:00")
-                  i.fas.fa-flag Nov 24
-              span.task__owner
-                i.fas.fa-check
+          each task in tasks
+            if task.estatus === 'Doing'
+              .task(draggable="true")
+                .task__tags
+                  span.task__tag(class="task__tag--" + task.importancia)= task.importancia
+                  button.task__options
+                    i.fas.fa-ellipsis-h
+                  .options-menu
+                    button.option-btn Editar
+                    button.option-btn Eliminar
+                p= task.descripcion
+                .task__stats
+                  span
+                    time(datetime=task.fecha_finalizacion)
+                      i.fas.fa-flag #{task.fecha_finalizacion}
+                  span.task__owner
+                    i.fas.fa-check
 
         .project-column
           .project-column-heading
             h2.project-column-heading__title Done
 
-          .task(draggable="true")
-            .task__tags
-              span.task__tag.task__tag--optional Optional
-              button.task__options
-                i.fas.fa-ellipsis-h
-              .options-menu
-                button.option-btn Editar
-                button.option-btn Eliminar
-            p Check the company we copied doesn't think we copied them.
-            .task__stats
-              span
-                time(datetime="2021-11-24T20:00:00")
-                  i.fas.fa-flag Nov 24
-              span.task__owner
-                i.fas.fa-check
+          each task in tasks
+            if task.estatus === 'Done'
+              .task(draggable="true")
+                .task__tags
+                  span.task__tag(class="task__tag--" + task.importancia)= task.importancia
+                  button.task__options
+                    i.fas.fa-ellipsis-h
+                  .options-menu
+                    button.option-btn Editar
+                    button.option-btn Eliminar
+                p= task.descripcion
+                .task__stats
+                  span
+                    time(datetime=task.fecha_finalizacion)
+                      i.fas.fa-flag #{task.fecha_finalizacion}
+                  span.task__owner
+                    i.fas.fa-check
 
 #myModal.modal
   .modal-content
@@ -109,4 +100,3 @@ section.dashboard
         option(value="optional") Optional
       br
       button(type="submit") Add Task 
-
