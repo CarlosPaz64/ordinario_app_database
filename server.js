@@ -9,6 +9,7 @@ const registerRouter = require('./routes/register'); // Importa la ruta de regis
 const loginRoute = require('./routes/login'); // Importa la ruta del login
 const logoutRoute = require('./routes/logout'); // Importa la ruta de logout
 const { getTasksByUserId } = require('./database/tasks'); // Importa la función para obtener los usuarios
+const { markTaskAsDone } = require('./controllers/tasksController'); // Importa el controlador para cambiar el estatus
 const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware'); // Importa los middlewares
 
 // Configura DotEnv

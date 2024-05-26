@@ -31,7 +31,7 @@ router.post('/', checkAuthenticated, async (req, res) => {
         res.redirect('/content'); // Redirige a la página principal después de crear la tarea
     } catch (error) {
         console.error('Error al crear la tarea:', error);
-        return res.render('content', { error: 'Error al encontrar crear la tarea. Inténtalo de nuevo.' });
+        return res.render('content', { error: 'Error al crear la tarea. Inténtalo de nuevo.' });
     }
 });
 

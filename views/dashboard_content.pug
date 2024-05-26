@@ -36,7 +36,7 @@ section.dashboard
                     time(datetime=task.fecha_finalizacion)
                       i.fas.fa-flag #{task.fecha_finalizacion}
                   span.task__owner
-                    i.fas.fa-check
+                    i.fas.fa-check(data-task-id=task.id)
 
         .project-column
           .project-column-heading
@@ -58,7 +58,7 @@ section.dashboard
                     time(datetime=task.fecha_finalizacion)
                       i.fas.fa-flag #{task.fecha_finalizacion}
                   span.task__owner
-                    i.fas.fa-check
+                    i.fas.fa-check(data-task-id=task.id)
 
         .project-column
           .project-column-heading
@@ -80,7 +80,7 @@ section.dashboard
                     time(datetime=task.fecha_finalizacion)
                       i.fas.fa-flag #{task.fecha_finalizacion}
                   span.task__owner
-                    i.fas.fa-check
+                    i.fas.fa-check(data-task-id=task.id)
 
 #myModal.modal
   .modal-content
