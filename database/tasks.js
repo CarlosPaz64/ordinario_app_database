@@ -24,7 +24,7 @@ async function getTasksByUserId(id_usuario) {
 }
 
 // Función para actualizar una tarea
-async function updateTask(id, descripcion, estatus, fecha_finalizacion, importancia) {
+async function updateIdTask(id, descripcion, estatus, fecha_finalizacion, importancia) {
     try {
         await pool.query(
             'UPDATE tasks SET descripcion = ?, estatus = ?, fecha_finalizacion = ?, importancia = ? WHERE id = ?',
@@ -69,7 +69,7 @@ async function deleteTask(id) {
 module.exports = {
     createTask,
     getTasksByUserId,
-    updateTask,
+    updateIdTask,
     markTaskAsDone,
     deleteTask,
     getTaskById

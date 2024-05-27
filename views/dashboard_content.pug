@@ -101,3 +101,23 @@ section.dashboard
         option(value="optional") Optional
       br
       button(type="submit") Add Task 
+
+#editModal.modal
+  .modal-content
+    span.closing &times;
+    p Edit task:
+    form(id="edit-task-form", action="/tasks/update-task", method="post")
+      input(type="hidden", id="edit-task-id", name="id")
+      label(for="edit-descripcion") Description:
+      textarea(placeholder="Description", id="edit-descripcion", maxlength="100", name="descripcion" required)
+      br
+      label(for="edit-fecha_finalizacion") Due to:
+      input(type="date", id="edit-fecha_finalizacion", name="fecha_finalizacion" required)
+      br
+      label(for="edit-importancia") Select priority:
+      select(id="edit-importancia", name="importancia" required)
+        option(value="critical") Critical
+        option(value="important") Important
+        option(value="optional") Optional
+      br
+      button(type="submit") Update Task

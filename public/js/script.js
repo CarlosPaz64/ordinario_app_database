@@ -174,6 +174,7 @@ document.getElementById('logout-link').addEventListener('click', function(event)
 });
 // Obtiene el elemento input de tipo date
 const inputDate = document.getElementById('fecha_finalizacion');
+const editDate = document.getElementById('edit-fecha_finalizacion');
 
 // Obtiene la fecha actual en formato yyyy-mm-dd
 const today = new Date();
@@ -196,6 +197,9 @@ const currentDate = `${year}-${month}-${day}`;
 
 // Establece la fecha mínima como la fecha actual
 inputDate.setAttribute('min', currentDate);
+editDate.setAttribute('min', currentDate);
+
+
 
 // Sobrepone una línea para marcar como Done la tarea (falta funcionalidad en la base de datos)
 document.addEventListener('DOMContentLoaded', function() {
@@ -212,14 +216,14 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// Script para eliminar la tarea o editar una tarea
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
   var deleteButtons = document.querySelectorAll('.delete-btn');
   var editButtons = document.querySelectorAll('.edit-btn');
-  var modal = document.getElementById('myModal');
-  var closeBtn = modal.querySelector('.closing');
-  var form = document.getElementById('task-form');
+  var editModal = document.getElementById('editModal');
+  var closeEditBtn = editModal.querySelector('.closing');
+  var editForm = document.getElementById('edit-task-form');
 
+  // Manejo de eliminación de tareas
   deleteButtons.forEach(function(button) {
     button.addEventListener('click', function() {
       var taskId = this.getAttribute('data-task-id');
@@ -249,19 +253,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
+  // Manejo de edición de tareas
   editButtons.forEach(function(button) {
     button.addEventListener('click', function() {
       var taskId = this.getAttribute('data-task-id');
       fetch(`/tasks/${taskId}`)
         .then(response => response.json())
         .then(task => {
-          document.getElementById('task-id').value = task.id;
-          document.getElementById('task-descripcion').value = task.descripcion;
-          document.getElementById('fecha_finalizacion').value = task.fecha_finalizacion;
-          document.getElementById('task-importancia').value = task.importancia;
-          form.action = `/tasks/update-task/${task.id}`;
-          form.method = 'PUT';
-          modal.style.display = "block";
+          document.getElementById('edit-task-id').value = task.id;
+          document.getElementById('edit-descripcion').value = task.descripcion;
+          document.getElementById('edit-fecha_finalizacion').value = task.fecha_finalizacion.split('T')[0]; // Solo la fecha, sin la hora
+          document.getElementById('edit-importancia').value = task.importancia;
+          editForm.action = `/tasks/update-task/${task.id}`;
+          editForm.method = 'POST';
+          editModal.style.display = "block";
         })
         .catch(error => {
           console.error('Error fetching task:', error);
@@ -270,13 +275,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  closeBtn.addEventListener('click', function() {
-    modal.style.display = "none";
+  closeEditBtn.addEventListener('click', function() {
+    editModal.style.display = "none";
   });
 
   window.onclick = function(event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
+    if (event.target == editModal) {
+      editModal.style.display = "none";
     }
   };
 });

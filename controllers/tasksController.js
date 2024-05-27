@@ -16,17 +16,36 @@ async function getTask(req, res) {
     }
 }
 
-// Controladores para las tareas
-async function updateTask(req, res) {
-    const { id, descripcion, estatus, fecha_finalizacion, importancia } = req.body;
-    try {
-        await tasksModel.updateTask(id, descripcion, estatus, fecha_finalizacion, importancia);
-        res.redirect('/content'); // Redirige a la página principal después de editar la tarea
-    } catch (error) {
-        console.error('Error al editar la tarea:', error);
-        return res.render('content', { error: 'Error al editar la tarea. Inténtalo de nuevo.' });
-    }
+// Función para obtener la fecha de hoy en la zona horaria local en formato yyyy-mm-dd
+function getLocalDate() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
+
+// Función para editar la tarea
+async function updateTask (req, res) {
+    const taskId = req.params.id;
+    console.log("Id de la tarea: ", taskId);
+    const { descripcion, fecha_finalizacion, importancia } = req.body;
+
+    // Obtener la fecha de hoy en formato yyyy-mm-dd
+    const today = getLocalDate();
+
+    // Verificar si la fecha de finalización es igual a la fecha de hoy
+    const estatus = fecha_finalizacion === today ? 'Doing' : 'To do';
+
+    try {
+        console.log("Intentado de actualizar la tarea: ", req.body);
+        await tasksModel.updateIdTask(taskId, descripcion, estatus, fecha_finalizacion, importancia);
+        res.redirect('/content'); // Redirige a la página principal después de actualizar la tarea
+    } catch (error) {
+        console.error('Error al actualizar la tarea:', error);
+        return res.render('content', { error: 'Error al actualizar la tarea. Inténtalo de nuevo.' });
+    }
+};
 
 async function markTaskAsDone(req, res) {
     const taskId = req.params.id;

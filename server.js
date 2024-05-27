@@ -46,6 +46,7 @@ app.get('/content', checkAuthenticated, async (req, res) => {
   const userId = req.session.userId;
   try {
       const tasks = await getTasksByUserId(userId);
+      console.log("Tasks: ", tasks);
       res.render('content', { tasks });
   } catch (error) {
       console.error('Error al obtener las tareas:', error);
@@ -70,7 +71,7 @@ app.get('/', checkAuthenticated, async (req, res) => {
 // Manejo de errores
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Algo salió mal');
+  res.status(500).send('Algo salió mal: ');
 });
 
 // Puerto en el que escucha el servidor
