@@ -34,7 +34,7 @@ section.dashboard
                 .task__stats
                   span
                     time(datetime=task.fecha_finalizacion)
-                      i.fas.fa-flag #{task.fecha_finalizacion}
+                      i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
                   span.task__owner
                     i.fas.fa-check(data-task-id=task.id)
 
@@ -56,7 +56,7 @@ section.dashboard
                 .task__stats
                   span
                     time(datetime=task.fecha_finalizacion)
-                      i.fas.fa-flag #{task.fecha_finalizacion}
+                      i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
                   span.task__owner
                     i.fas.fa-check(data-task-id=task.id)
 
@@ -78,7 +78,8 @@ section.dashboard
                 .task__stats
                   span
                     time(datetime=task.fecha_finalizacion)
-                      i.fas.fa-flag #{task.fecha_finalizacion}
+                      i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+
                   span.task__owner
                     i.fas.fa-check(data-task-id=task.id)
 
