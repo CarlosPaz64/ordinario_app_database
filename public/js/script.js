@@ -76,6 +76,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
         dragSrcEl.innerHTML = this.innerHTML;
         this.innerHTML = e.dataTransfer.getData('text/html');
       }
+
+      // Reasignar eventos de arrastre y soltar
+      initDragAndDrop();
+      // Reasignar eventos para las opciones y el estado de la tarea
+      initTaskOptions();
+      initTaskStatusToggle();
   
       return false;
     }
@@ -132,7 +138,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   
 
 // Script para mostrar las operaciones del CRUD
-document.addEventListener('DOMContentLoaded', () => {
+function initTaskOptions() {
   // Toggle the visibility of the options menu on button click
   document.querySelectorAll('.task__options').forEach(button => {
     button.addEventListener('click', (event) => {
@@ -150,7 +156,13 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+}
+
+// Inicializar las opciones de tarea
+document.addEventListener('DOMContentLoaded', () => {
+  initTaskOptions();
 });
+
 
 // Deslogueo de la aplicación mediante una API Fetch
 document.getElementById('logout-link').addEventListener('click', function(event) {
@@ -202,20 +214,86 @@ editDate.setAttribute('min', currentDate);
 
 
 // Sobrepone una línea para marcar como Done la tarea (falta funcionalidad en la base de datos)
-document.addEventListener('DOMContentLoaded', function() {
-  // Obtiene todos los botones con el icono de check
+function initTaskStatusToggle() {
   var checkButtons = document.querySelectorAll('.fas.fa-check');
 
   checkButtons.forEach(function(button) {
-    button.addEventListener('click', function() {
-      // Encuentra el contenedor de la tarea (elemento .task)
+    button.addEventListener('click', async function() {
+      var taskId = this.getAttribute('data-task-id');
       var taskElement = this.closest('.task');
-      // Alterna la clase 'checked' en el contenedor de la tarea
-      taskElement.classList.toggle('checked');
+
+      try {
+        let response = await fetch(`/tasks/${taskId}/toggle-status`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        let result = await response.json();
+        if (result.success) {
+          // Actualiza la clase 'checked' según el nuevo estatus
+          if (result.status === 'Done') {
+            taskElement.classList.add('checked');
+          } else {
+            taskElement.classList.remove('checked');
+          }
+
+          // Determina la columna a la que se debe mover la tarea
+          var newColumn;
+          if (result.status === 'Done') {
+            newColumn = document.querySelector('.project-column-tasks[data-status="Done"]');
+          } else {
+            // Aquí se realiza la validación de la fecha de finalización
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            var endDate = new Date(taskElement.querySelector('time').getAttribute('datetime'));
+            endDate.setHours(0, 0, 0, 0);
+
+            if (endDate.getTime() === today.getTime()) {
+              newColumn = document.querySelector('.project-column-tasks[data-status="Doing"]');
+            } else {
+              newColumn = document.querySelector('.project-column-tasks[data-status="To do"]');
+            }
+          }
+
+          if (newColumn) {
+            newColumn.appendChild(taskElement);
+          }
+
+          // Reactivar los eventos de arrastrar y soltar
+          initDragAndDrop();
+          // Reactivar los eventos para las opciones
+          initTaskOptions();
+
+        } else {
+          console.error('Error al actualizar el estatus de la tarea:', result.message);
+        }
+      } catch (error) {
+        console.error('Error al realizar la petición:', error);
+      }
     });
   });
+}
+
+// Inicializar el estatus de tarea
+document.addEventListener('DOMContentLoaded', () => {
+  initTaskStatusToggle();
+  initTaskOptions();
+  initDragAndDrop();
 });
 
+
+// Inicializar el estatus de tarea
+document.addEventListener('DOMContentLoaded', () => {
+  initTaskStatusToggle();
+  initTaskOptions();
+  initDragAndDrop();
+});
+
+
+
+// Script del CRUD de la aplicación
 document.addEventListener('DOMContentLoaded', () => {
   var deleteButtons = document.querySelectorAll('.delete-btn');
   var editButtons = document.querySelectorAll('.edit-btn');

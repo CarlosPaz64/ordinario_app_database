@@ -46,15 +46,26 @@ async function getTaskById(id) {
     }
 }
 
-// Función para actualizar el estatus de una tarea a 'Done'
-async function markTaskAsDone(id) {
+async function toggleTaskStatus(id) {
     try {
-        await pool.query('UPDATE tasks SET estatus = ? WHERE id = ?', ['Done', id]);
-        return true; // Retorna true si la actualización fue exitosa
+        // Obtener el estatus actual de la tarea
+        const [rows] = await pool.query('SELECT estatus FROM tasks WHERE id = ?', [id]);
+        if (rows.length === 0) {
+            throw new Error('Task not found');
+        }
+
+        // Determinar el nuevo estatus
+        const currentStatus = rows[0].estatus;
+        const newStatus = currentStatus === 'Done' ? 'To do' : 'Done'; // Puedes ajustar esto según tus estados posibles
+
+        // Actualizar el estatus
+        await pool.query('UPDATE tasks SET estatus = ? WHERE id = ?', [newStatus, id]);
+        return newStatus; // Retorna el nuevo estatus
     } catch (error) {
         throw error; // Lanza el error para manejarlo en el servidor
     }
 }
+
 
 // Función para eliminar una tarea
 async function deleteTask(id) {
@@ -70,7 +81,7 @@ module.exports = {
     createTask,
     getTasksByUserId,
     updateIdTask,
-    markTaskAsDone,
+    toggleTaskStatus,
     deleteTask,
     getTaskById
 };

@@ -49,14 +49,17 @@ async function updateTask (req, res) {
 
 async function markTaskAsDone(req, res) {
     const taskId = req.params.id;
+    console.log("Tarea para poner como 'Done' con el ID: ", taskId);
     try {
-        await tasksModel.markTaskAsDone(taskId);
-        res.redirect('/content'); // Redirige a la página principal después de cambiar el estado de la tarea
+        const newStatus = await tasksModel.toggleTaskStatus(taskId);
+        console.log("El nuevo estatus de la tarea será: ", newStatus);
+        res.json({ success: true, status: newStatus });
     } catch (error) {
         console.error('Error al cambiar el estatus de la tarea:', error);
-        return res.render('content', { error: 'Error al cambiar el estatus la tarea. Inténtalo de nuevo.' });
+        res.status(500).json({ success: false, message: 'Error al cambiar el estatus de la tarea. Inténtalo de nuevo.' });
     }
 }
+
 
 async function deleteTask(req, res) {
     const taskId = req.params.id;

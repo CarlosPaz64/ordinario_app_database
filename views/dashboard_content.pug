@@ -12,7 +12,6 @@ section.dashboard
         if error
           p.error= error
         .project-participants
-          // Botón para abrir el modal view
           button.project-participants__add#myBtn Add Participant
 
       .project-tasks
@@ -20,68 +19,72 @@ section.dashboard
           .project-column-heading
             h2.project-column-heading__title To do
 
-          each task in tasks
-            if task.estatus === 'To do'
-              .task(draggable="true")
-                .task__tags
-                  span.task__tag(class="task__tag--" + task.importancia)= task.importancia
-                  button.task__options
-                    i.fas.fa-ellipsis-h
-                  .options-menu
-                    button.option-btn.edit-btn(data-task-id=task.id) Editar
-                    button.option-btn.delete-btn(data-task-id=task.id) Eliminar
-                p= task.descripcion
-                .task__stats
-                  span
-                    time(datetime=task.fecha_finalizacion)
-                      i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
-                  span.task__owner
-                    i.fas.fa-check(data-task-id=task.id)
+          .project-column-tasks(data-status="To do")
+            each task in tasks
+              if task.estatus === 'To do'
+                .task(draggable="true")
+                  .task__tags
+                    span.task__tag(class="task__tag--" + task.importancia)= task.importancia
+                    button.task__options
+                      i.fas.fa-ellipsis-h
+                    .options-menu
+                      button.option-btn.edit-btn(data-task-id=task.id) Editar
+                      button.option-btn.delete-btn(data-task-id=task.id) Eliminar
+                  p= task.descripcion
+                  .task__stats
+                    span
+                      time(datetime=task.fecha_finalizacion)
+                        i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+                    span.task__owner
+                      i.fas.fa-check(data-task-id=task.id, class=task.estatus === 'Done' ? 'checked' : '')
 
         .project-column
           .project-column-heading
             h2.project-column-heading__title Doing
 
-          each task in tasks
-            if task.estatus === 'Doing'
-              .task(draggable="true")
-                .task__tags
-                  span.task__tag(class="task__tag--" + task.importancia)= task.importancia
-                  button.task__options
-                    i.fas.fa-ellipsis-h
-                  .options-menu
-                    button.option-btn.edit-btn(data-task-id=task.id) Editar
-                    button.option-btn.delete-btn(data-task-id=task.id) Eliminar
-                p= task.descripcion
-                .task__stats
-                  span
-                    time(datetime=task.fecha_finalizacion)
-                      i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
-                  span.task__owner
-                    i.fas.fa-check(data-task-id=task.id)
+          .project-column-tasks(data-status="Doing")
+            each task in tasks
+              if task.estatus === 'Doing'
+                .task(draggable="true")
+                  .task__tags
+                    span.task__tag(class="task__tag--" + task.importancia)= task.importancia
+                    button.task__options
+                      i.fas.fa-ellipsis-h
+                    .options-menu
+                      button.option-btn.edit-btn(data-task-id=task.id) Editar
+                      button.option-btn.delete-btn(data-task-id=task.id) Eliminar
+                  p= task.descripcion
+                  .task__stats
+                    span
+                      time(datetime=task.fecha_finalizacion)
+                        i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+                    span.task__owner
+                      i.fas.fa-check(data-task-id=task.id, class=task.estatus === 'Done' ? 'checked' : '')
 
         .project-column
           .project-column-heading
             h2.project-column-heading__title Done
 
-          each task in tasks
-            if task.estatus === 'Done'
-              .task(draggable="true")
-                .task__tags
-                  span.task__tag(class="task__tag--" + task.importancia)= task.importancia
-                  button.task__options
-                    i.fas.fa-ellipsis-h
-                  .options-menu
-                    button.option-btn.edit-btn(data-task-id=task.id) Editar
-                    button.option-btn.delete-btn(data-task-id=task.id) Eliminar
-                p= task.descripcion
-                .task__stats
-                  span
-                    time(datetime=task.fecha_finalizacion)
-                      i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+          .project-column-tasks(data-status="Done")
+            each task in tasks
+              if task.estatus === 'Done'
+                .task(draggable="true")
+                  .task__tags
+                    span.task__tag(class="task__tag--" + task.importancia)= task.importancia
+                    button.task__options
+                      i.fas.fa-ellipsis-h
+                    .options-menu
+                      button.option-btn.edit-btn(data-task-id=task.id) Editar
+                      button.option-btn.delete-btn(data-task-id=task.id) Eliminar
+                  p= task.descripcion
+                  .task__stats
+                    span
+                      time(datetime=task.fecha_finalizacion)
+                        i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+                    span.task__owner
+                      i.fas.fa-check(data-task-id=task.id, class=task.estatus === 'Done' ? 'checked' : '')
 
-                  span.task__owner
-                    i.fas.fa-check(data-task-id=task.id)
+
 
 #myModal.modal
   .modal-content
