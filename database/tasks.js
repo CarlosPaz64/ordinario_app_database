@@ -46,6 +46,9 @@ async function getTaskById(id) {
     }
 }
 
+// Declarar un objeto para almacenar el estado anterior de las tareas marcadas como "Done"
+const previousStatus = {};
+
 async function toggleTaskStatus(id) {
     try {
         // Obtener el estatus actual de la tarea
@@ -56,15 +59,38 @@ async function toggleTaskStatus(id) {
 
         // Determinar el nuevo estatus
         const currentStatus = rows[0].estatus;
-        const newStatus = currentStatus === 'Done' ? 'To do' : 'Done'; // Puedes ajustar esto según tus estados posibles
+        let newStatus;
+
+        // Determinar el nuevo estatus basado en el estatus actual
+        switch (currentStatus) {
+            case 'Done':
+                // Si la tarea estaba 'Done', volver al estado anterior almacenado
+                newStatus = previousStatus[id];
+                break;
+            case 'Doing':
+                newStatus = 'Done'; // Si estaba 'Doing', cambiar a 'Done'
+                break;
+            case 'To do':
+                newStatus = 'Done'; // Si estaba 'To do', cambiar a 'Done'
+                break;
+            default:
+                throw new Error('Invalid task status');
+        }
 
         // Actualizar el estatus
         await pool.query('UPDATE tasks SET estatus = ? WHERE id = ?', [newStatus, id]);
+
+        // Actualizar el registro del estado anterior si se ha cambiado a "Done"
+        if (currentStatus !== 'Done') {
+            previousStatus[id] = currentStatus;
+        }
+
         return newStatus; // Retorna el nuevo estatus
     } catch (error) {
         throw error; // Lanza el error para manejarlo en el servidor
     }
 }
+
 
 
 // Función para eliminar una tarea
