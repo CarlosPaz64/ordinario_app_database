@@ -1,9 +1,9 @@
 const express = require('express');
+const passport = require('passport');
 const path = require('path');
 const dotenv = require('dotenv');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const pool = require('./database/database'); // Importa la base de datos
 const userModel = require('./models/userModel') // Importa el modelo de los usuarios
 const createTaskRoute = require('./routes/create-task'); // Importa la ruta para la creación de tareas
 const registerRouter = require('./routes/register'); // Importa la ruta de registro
@@ -11,7 +11,7 @@ const loginRoute = require('./routes/login'); // Importa la ruta del login
 const logoutRoute = require('./routes/logout'); // Importa la ruta de logout
 const tasksRoute = require('./routes/actionsTasks'); // Importa la ruta de las acciones con las tareas
 const { getTasksByUserId, getRecentTasks, getTasksByStatus } = require('./database/tasks'); // Importa la función para obtener los usuarios
-const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware'); // Importa los middlewares
+const { checkAuthenticated, checkNotAuthenticated, checkServerRestart } = require('./checkAuthenticated/authMiddleware'); // Importa los middlewares
 
 // Configura DotEnv
 dotenv.config();
@@ -20,13 +20,15 @@ const app = express();
 
 app.use(cookieParser()); // Llamada a cookie parser
 
-// Configuración de sesiones
+// Configuración de Passport.js
 app.use(session({
   secret: process.env.SECRET_SESSION,
   resave: false,
   saveUninitialized: false,
   cookie: { secure: false } // Asegúrate de configurar esto en true en producción con HTTPS
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Configuración de la plantilla Pug
 app.set('view engine', 'pug');
@@ -37,10 +39,12 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(checkServerRestart);
+
 // Rutas
 app.use('/register', checkNotAuthenticated, registerRouter); // Usa la ruta de registro
 app.use('/login', checkNotAuthenticated, loginRoute); // Usa la ruta del login
-app.use('/logout', checkAuthenticated, logoutRoute); // Usa la ruta del logout
+app.use('/logout', logoutRoute); // Usa la ruta del logout
 app.use('/create-task', checkAuthenticated, createTaskRoute); // Usa la ruta del create-task
 app.use('/tasks', checkAuthenticated, tasksRoute); // Usa la ruta para eliminar o editar la tarea 
 
@@ -99,6 +103,12 @@ app.get('/', checkAuthenticated, async (req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Algo salió mal: ');
+});
+
+// Ruta para el logout utilizando Passport.js
+logoutRoute.get('/', (req, res) => {
+  req.logout();
+  res.redirect('/login');
 });
 
 // Puerto en el que escucha el servidor
