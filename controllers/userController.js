@@ -56,6 +56,7 @@ async function loginUser(req, res) {
 
 function logoutUser(req, res) {
     req.session.destroy((err) => {
+        console.log("Se va a destruir la sesión");
         if (err) {
             return res.status(500).send('Error al cerrar sesión');
         }
