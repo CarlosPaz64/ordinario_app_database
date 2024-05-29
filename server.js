@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const pool = require('./database/database'); // Importa la base de datos
 const userModel = require('./models/userModel') // Importa el modelo de los usuarios
 const createTaskRoute = require('./routes/create-task'); // Importa la ruta para la creación de tareas
@@ -16,6 +17,8 @@ const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthentica
 dotenv.config();
 
 const app = express();
+
+app.use(cookieParser()); // Llamada a cookie parser
 
 // Configuración de sesiones
 app.use(session({

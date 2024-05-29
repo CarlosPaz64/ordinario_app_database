@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 
@@ -23,19 +24,27 @@ async function register(req, res) {
 
 async function loginUser(req, res) {
     const { correo, contrasenia } = req.body;
+
     try {
         const user = await userModel.findUserByEmail(correo);
+        console.log("Usuario: ", user);
         if (!user) {
-            console.log('Usuario no encontrado');
             return res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
         }
         const passwordMatch = await bcrypt.compare(contrasenia, user.contrasenia_hashed);
+        console.log("Contraseña: ", passwordMatch);
         if (!passwordMatch) {
             console.log('Contraseña incorrecta');
             return res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
         }
+
         req.session.userId = user.id;
-        console.log('Usuario autenticado:', user.id);
+        console.log("Este es el usuario: ", req.session.userId);
+
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        console.log("El token de este usuario será: ", token);
+        res.cookie('jwt', token, { httpOnly: true, secure: false }); // Asegúrate de configurar secure: true en producción
+
         res.redirect('/');
     } catch (error) {
         console.error('Error durante el proceso de inicio de sesión:', error);
