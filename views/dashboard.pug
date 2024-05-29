@@ -1,4 +1,4 @@
-//- _dashboard.pug
+//- dashboard.pug
 section.dashboard
   .top
     i(class="uil uil-bars sidebar-toggle")
@@ -6,67 +6,38 @@ section.dashboard
     .overview
       .title
         i(class="uil uil-tachometer-fast-alt")
-        span.text ¡Hola #{user.nombre}! Bienvenido al dashboard.
+        span.text ¡Hola #{user.nombre}! Bienvenido al dashboard. Estas son tus tareas:
       .boxes
         .box.box1
           i(class="uil uil-star")
           span.text To do
-          span.number 50,120
+          span.number= toDoCount
         .box.box2
           i(class="uil uil-constructor")
           span.text Doing
-          span.number 20,120
+          span.number= doingCount
         .box.box3
           i(class="uil uil-presentation-check")
           span.text Done
-          span.number 10,120
+          span.number= doneCount
     .activity
       .title
         i(class="uil uil-clock-three")
-        span.text Tareas recientes
+        span.text Tareas recientes de #{user.nombre} #{user.apellidos}
       .activity-data
         .data.names
-          span.data-title Name
-          span.data-list Prem Shahi
-          span.data-list Deepa Chand
-          span.data-list Manisha Chand
-          span.data-list Pratima Shahi
-          span.data-list Man Shahi
-          span.data-list Ganesh Chand
-          span.data-list Bikash Chand
+          span.data-title Nombre
+          each task in recentTasks
+            span.data-list= task.descripcion
         .data.email
           span.data-title Email
-          span.data-list premshahi@gmail.com
-          span.data-list deepachand@gmail.com
-          span.data-list prakashhai@gmail.com
-          span.data-list manishachand@gmail.com
-          span.data-list pratimashhai@gmail.com
-          span.data-list manshahi@gmail.com
-          span.data-list ganeshchand@gmail.com
+          each task in recentTasks
+            span.data-list= user.correo
         .data.joined
-          span.data-title Joined
-          span.data-list 2022-02-12
-          span.data-list 2022-02-12
-          span.data-list 2022-02-13
-          span.data-list 2022-02-13
-          span.data-list 2022-02-14
-          span.data-list 2022-02-14
-          span.data-list 2022-02-15
+          span.data-title Fecha
+          each task in recentTasks
+            span.data-list #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
         .data.type
-          span.data-title Type
-          span.data-list New
-          span.data-list Member
-          span.data-list Member
-          span.data-list New
-          span.data-list Member
-          span.data-list New
-          span.data-list Member
-        .data.status
-          span.data-title Status
-          span.data-list Liked
-          span.data-list Liked
-          span.data-list Liked
-          span.data-list Liked
-          span.data-list Liked
-          span.data-list Liked
-          span.data-list Liked
+          span.data-title Estatus
+          each task in recentTasks
+            span.data-list= task.estatus

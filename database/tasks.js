@@ -103,11 +103,54 @@ async function deleteTask(id) {
     }
 }
 
+// Función para obtener las tareas por usuario y agruparlas por estatus
+async function getTasksByStatus(id_usuario) {
+    try {
+        const query = `
+            SELECT 
+                estatus, 
+                COUNT(*) as count 
+            FROM 
+                tasks 
+            WHERE 
+                id_usuario = ? 
+            GROUP BY 
+                estatus
+        `;
+        const [rows] = await pool.query(query, [id_usuario]);
+        return rows;
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Función para obtener las tareas recientes de un usuario
+async function getRecentTasks(id_usuario, limit = 5) {
+    try {
+        const query = `
+            SELECT * 
+            FROM 
+                tasks 
+            WHERE 
+                id_usuario = ? 
+            ORDER BY 
+                fecha_finalizacion DESC 
+            LIMIT ?
+        `;
+        const [rows] = await pool.query(query, [id_usuario, limit]);
+        return rows;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     createTask,
     getTasksByUserId,
     updateIdTask,
     toggleTaskStatus,
     deleteTask,
-    getTaskById
+    getTaskById,
+    getRecentTasks,
+    getTasksByStatus
 };

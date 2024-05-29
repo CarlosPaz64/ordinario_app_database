@@ -9,7 +9,7 @@ const registerRouter = require('./routes/register'); // Importa la ruta de regis
 const loginRoute = require('./routes/login'); // Importa la ruta del login
 const logoutRoute = require('./routes/logout'); // Importa la ruta de logout
 const tasksRoute = require('./routes/actionsTasks'); // Importa la ruta de las acciones con las tareas
-const { getTasksByUserId } = require('./database/tasks'); // Importa la función para obtener los usuarios
+const { getTasksByUserId, getRecentTasks, getTasksByStatus } = require('./database/tasks'); // Importa la función para obtener los usuarios
 const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware'); // Importa los middlewares
 
 // Configura DotEnv
@@ -60,7 +60,31 @@ app.get('/', checkAuthenticated, async (req, res) => {
       if (!user) {
           throw new Error('Usuario no encontrado');
       }
-      res.render('index', { user }); // Renderiza la vista con el objeto de usuario
+
+      // Obtén las tareas recientes y las tareas por estado
+      const tasksByStatus = await getTasksByStatus(user.id);
+      const recentTasks = await getRecentTasks(user.id);
+
+      // Inicializa contadores
+      let toDoCount = 0;
+      let doingCount = 0;
+      let doneCount = 0;
+
+      // Cuenta las tareas por estado
+      tasksByStatus.forEach(task => {
+          if (task.estatus === 'To do') toDoCount = task.count;
+          if (task.estatus === 'Doing') doingCount = task.count;
+          if (task.estatus === 'Done') doneCount = task.count;
+      });
+
+      // Renderiza la vista con los datos obtenidos
+      res.render('index', {
+          user,
+          toDoCount,
+          doingCount,
+          doneCount,
+          recentTasks
+      });
   } catch (error) {
       console.error(error);
       res.status(500).send('Error al cargar el dashboard');
