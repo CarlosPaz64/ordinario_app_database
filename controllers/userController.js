@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const userModel = require('../services/userService');
+const userModel = require('../models/userModel');
 
 // Utilidad para enviar una respuesta JSON exitosa
 function sendSuccessResponse(res, data) {

@@ -1,4 +1,4 @@
-const tasksModel = require('../services/taskService'); // Asegúrate de importar el modelo adecuado
+const tasksModel = require('../models/tasksModel'); // Asegúrate de importar el modelo adecuado
 
 // Utilidad para enviar una respuesta JSON exitosa
 function sendSuccessResponse(res, data) {
