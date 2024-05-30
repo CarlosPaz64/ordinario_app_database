@@ -35,17 +35,4 @@ function checkNotAuthenticated(req, res, next) {
     res.redirect('/');
 }
 
-const lastServerRestartTime = Date.now();
-
-function checkServerRestart(req, res, next) {
-    if (req.session && req.session.loginTime) {
-      if (req.session.loginTime < lastServerRestartTime) {
-        console.log('Sesión creada antes del último reinicio del servidor, redirigiendo a /logout');
-        return res.redirect('/logout');
-      }
-    }
-    next();
-  }
-  
-
-module.exports = { checkAuthenticated, checkNotAuthenticated, checkServerRestart };
+module.exports = { checkAuthenticated, checkNotAuthenticated };

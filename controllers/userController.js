@@ -20,37 +20,39 @@ async function register(req, res) {
          res.render('register', { error: 'Error al registrar usuario. Inténtalo de nuevo.' });
     }
 }
+
+
 async function loginUser(req, res) {
     const { correo, contrasenia } = req.body;
-  
+
     try {
-      const user = await userModel.findUserByEmail(correo);
-      console.log("Usuario: ", user);
-      if (!user) {
-        return res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
-      }
-      const passwordMatch = await bcrypt.compare(contrasenia, user.contrasenia_hashed);
-      console.log("Contraseña: ", passwordMatch);
-      if (!passwordMatch) {
-        console.log('Contraseña incorrecta');
-        return res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
-      }
-  
-      req.session.userId = user.id;
-      req.session.loginTime = Date.now(); // Guarda el tiempo de inicio de sesión
-      console.log("Este es el usuario: ", req.session.userId);
-  
-      const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      console.log("El token de este usuario será: ", token);
-      res.cookie('jwt', token, { httpOnly: true, secure: false }); // Asegúrate de configurar secure: true en producción
-  
-      res.redirect('/');
+        const user = await userModel.findUserByEmail(correo);
+        console.log("Usuario: ", user);
+        if (!user) {
+            return res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
+        }
+        const passwordMatch = await bcrypt.compare(contrasenia, user.contrasenia_hashed);
+        console.log("Contraseña: ", passwordMatch);
+        if (!passwordMatch) {
+            console.log('Contraseña incorrecta');
+            return res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
+        }
+
+        req.session.userId = user.id;
+        console.log("Este es el usuario: ", req.session.userId);
+
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        console.log("El token de este usuario será: ", token);
+        res.cookie('jwt', token, { httpOnly: true, secure: false }); // Asegúrate de configurar secure: true en producción
+
+        res.redirect('/');
     } catch (error) {
-      console.error('Error durante el proceso de inicio de sesión:', error);
-      res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
+        console.error('Error durante el proceso de inicio de sesión:', error);
+        res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
     }
-  }
-  
+}
+
+
 
 function logoutUser(req, res) {
     req.session.destroy((err) => {
