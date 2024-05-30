@@ -43,7 +43,7 @@ async function loginUser(req, res) {
 
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log("El token de este usuario será: ", token);
-        res.cookie('jwt', token, { httpOnly: true, secure: false }); // Asegúrate de configurar secure: true en producción
+        res.cookie('jwt', token, { httpOnly: true, secure: false });
 
         res.redirect('/');
     } catch (error) {
