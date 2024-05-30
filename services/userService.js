@@ -1,22 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const userModel = require('../services/userService');
-
-// Utilidad para enviar una respuesta JSON exitosa
-function sendSuccessResponse(res, data) {
-    res.status(200).json(data);
-}
-
-// Utilidad para enviar una respuesta de error
-function sendErrorResponse(res, statusCode, message) {
-    res.status(statusCode).json({ error: message });
-}
-
-// Utilidad para manejar errores internos del servidor
-function handleServerError(res, error) {
-    console.error('Error:', error);
-    sendErrorResponse(res, 500, 'Error interno del servidor');
-}
+const userModel = require('../models/userModel');
 
 async function register(req, res) {
     const { nombre, apellidos, correo, contrasenia } = req.body;
@@ -32,10 +16,11 @@ async function register(req, res) {
         res.redirect('/login');
     } catch (error) {
         console.error(error);
-        // Renderiza la página de registro con un mensaje de error
-        res.render('register', { error: 'Error al registrar usuario. Inténtalo de nuevo.' });
+         // Renderiza la página de registro con un mensaje de error
+         res.render('register', { error: 'Error al registrar usuario. Inténtalo de nuevo.' });
     }
 }
+
 
 async function loginUser(req, res) {
     const { correo, contrasenia } = req.body;
@@ -66,6 +51,8 @@ async function loginUser(req, res) {
         res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
     }
 }
+
+
 
 function logoutUser(req, res) {
     req.session.destroy((err) => {
