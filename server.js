@@ -3,6 +3,8 @@ const path = require('path');
 const dotenv = require('dotenv');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const pool = require('./database/database'); // Importa la base de datos
 const userModel = require('./models/userModel') // Importa el modelo de los usuarios
 const createTaskRoute = require('./routes/create-task'); // Importa la ruta para la creación de tareas
@@ -27,6 +29,41 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: false } // Asegúrate de configurar esto en true en producción con HTTPS
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+passport.use(new LocalStrategy(async (correo, contrasenia, done) => {
+  try {
+      const user = await userModel.findUserByEmail(correo);
+      if (!user) {
+          return done(null, false, { message: 'Nombre de usuario incorrecto' });
+      }
+      const passwordMatch = await bcrypt.compare(contrasenia, user.contrasenia);
+      if (!passwordMatch) {
+          return done(null, false, { message: 'Contraseña incorrecta' });
+      }
+      return done(null, user);
+  } catch (error) {
+      return done(error);
+  }
+}));
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+      const user = await userModel.findUserById(id);
+      if (!user) {
+          return done(new Error('Usuario no encontrado'));
+      }
+      return done(null, user);
+  } catch (error) {
+      return done(error);
+  }
+});
 
 // Configuración de la plantilla Pug
 app.set('view engine', 'pug');
