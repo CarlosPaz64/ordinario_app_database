@@ -10,7 +10,7 @@ const registerRouter = require('./routes/register'); // Importa la ruta de regis
 const loginRoute = require('./routes/login'); // Importa la ruta del login
 const logoutRoute = require('./routes/logout'); // Importa la ruta de logout
 const tasksRoute = require('./routes/actionsTasks'); // Importa la ruta de las acciones con las tareas
-const { getTasksByUserId, getRecentTasks, getTasksByStatus } = require('./database/tasks'); // Importa la función para obtener los usuarios
+const { getTasksByUserId, getRecentTasks, getTasksByStatus } = require('./models/tasksModel'); // Importa la función para obtener los usuarios
 const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware'); // Importa los middlewares
 
 // Configura DotEnv
@@ -59,7 +59,7 @@ app.get('/content', checkAuthenticated, async (req, res) => {
 
 app.get('/', checkAuthenticated, async (req, res) => {
   try {
-      const user = await userModel.findUserById(req.session.userId); // Encuentra al usuario por su ID de sesión
+      const user = await userModel.findUserById(req.userId); // Encuentra al usuario por su ID de usuario decodificado del token JWT
       if (!user) {
           throw new Error('Usuario no encontrado');
       }

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createTask } = require('../database/tasks');
+const { createTask } = require('../models/tasksModel');
 const { checkAuthenticated } = require('../checkAuthenticated/authMiddleware');
 
 // Función para obtener la fecha de hoy en la zona horaria local en formato yyyy-mm-dd
