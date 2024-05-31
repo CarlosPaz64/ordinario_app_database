@@ -64,7 +64,7 @@ function checkAuthenticated(req, res, next) {
         });
     } else {
         console.log('Usuario no autenticado, redirigiendo a /login');
-        res.redirect('/login');
+        res.redirect('usuarios/login');
     }
 }
 

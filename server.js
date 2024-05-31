@@ -4,16 +4,11 @@ const dotenv = require('dotenv');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
+const routes = require('./routes/routes');
 const LocalStrategy = require('passport-local').Strategy;
-const pool = require('./database/database'); // Importa la base de datos
 const userModel = require('./models/userModel') // Importa el modelo de los usuarios
-const createTaskRoute = require('./routes/create-task'); // Importa la ruta para la creación de tareas
-const registerRouter = require('./routes/register'); // Importa la ruta de registro
-const loginRoute = require('./routes/login'); // Importa la ruta del login
-const logoutRoute = require('./routes/logout'); // Importa la ruta de logout
-const tasksRoute = require('./routes/actionsTasks'); // Importa la ruta de las acciones con las tareas
-const { getTasksByUserId, getRecentTasks, getTasksByStatus } = require('./models/tasksModel'); // Importa la función para obtener los usuarios
-const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware'); // Importa los middlewares
+const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware')
+
 
 // Configura DotEnv
 dotenv.config();
@@ -75,13 +70,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Rutas
-app.use('/register', checkNotAuthenticated, registerRouter); // Usa la ruta de registro
-app.use('/login', checkNotAuthenticated, loginRoute); // Usa la ruta del login
-app.use('/logout', checkAuthenticated, logoutRoute); // Usa la ruta del logout
-app.use('/create-task', checkAuthenticated, createTaskRoute); // Usa la ruta del create-task
-app.use('/tasks', checkAuthenticated, tasksRoute); // Usa la ruta para eliminar o editar la tarea 
+app.use('/', routes);
 
-// Rutas existentes protegidas
+// Rutas del inicio de la aplicación
 app.get('/content', checkAuthenticated, async (req, res) => {
   const userId = req.session.userId;
   try {
@@ -139,7 +130,7 @@ app.use((err, req, res, next) => {
 });
 
 // Puerto en el que escucha el servidor
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Servidor iniciado en http://localhost:${port}`);
 });
