@@ -14,12 +14,7 @@ class Usuario {
 }
 
 // Función para registrar un nuevo usuario
-async function registerUser(nombre, apellidos, correo, contrasenia_hashed, token) {
-    const axiosConfig = {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    };
+async function registerUser(nombre, apellidos, correo, contrasenia_hashed) {
 
     try {
         const response = await axios.post(`${process.env.BASE_URL}/usuarios/register`, {
@@ -37,15 +32,9 @@ async function registerUser(nombre, apellidos, correo, contrasenia_hashed, token
 }
 
 // Función para buscar un usuario por correo electrónico
-async function findUserByEmail(correo, token) {
-    const axiosConfig = {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    };
-
+async function findUserByEmail(correo) {
     try {
-        const response = await axios.get(`${process.env.BASE_URL}/usuarios/login`, axiosConfig);
+        const response = await axios.get(`${process.env.BASE_URL}/usuarios/login`);
         const userData = response.data;
         return new Usuario(userData.id, userData.nombre, userData.apellidos, userData.correo);
     } catch (error) {
@@ -55,12 +44,7 @@ async function findUserByEmail(correo, token) {
 }
 
 // Función para buscar un usuario por su ID
-async function findUserById(userId, token) {
-    const axiosConfig = {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    };
+async function findUserById(userId) {
 
     try {
         const response = await axios.get(`${process.env.BASE_URL}/usuarios/${userId}`, axiosConfig);

@@ -7,14 +7,19 @@ const passport = require('passport');
 const routes = require('./routes/routes');
 const LocalStrategy = require('passport-local').Strategy;
 const userModel = require('./models/userModel') // Importa el modelo de los usuarios
-const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware')
+const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware');
+const bodyParser = require('body-parser');
 
 
 // Configura DotEnv
 dotenv.config();
 
 const app = express();
+// Parsea las solicitudes con el tipo de contenido 'application/x-www-form-urlencoded'
+app.use(bodyParser.urlencoded({ extended: false }));
 
+// Parsea las solicitudes con el tipo de contenido 'application/json'
+app.use(bodyParser.json());
 app.use(cookieParser()); // Llamada a cookie parser
 
 // Configuración de sesiones

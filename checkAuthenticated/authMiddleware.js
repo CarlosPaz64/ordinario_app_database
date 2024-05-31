@@ -1,9 +1,21 @@
-const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const crypto = require('crypto');
-const bcrypt = require('bcrypt');
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 dotenv.config();
+
+// Función para convertir texto a binario
+function textToBinary(text) {
+    return text.split('').map(char => {
+        return char.charCodeAt(0).toString(2).padStart(8, '0');
+    }).join(' ');
+}
+
+// Función para convertir binario a texto
+function binaryToText(binary) {
+    return binary.split(' ').map(bin => {
+        return String.fromCharCode(parseInt(bin, 2));
+    }).join('');
+}
 
 function verificarToken(req, res, next) {
     const token = req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : null;
@@ -22,26 +34,14 @@ function verificarToken(req, res, next) {
 }
 
 function verificarDatos(dataSegura) {
-    let partes = dataSegura.split(',');
-    let resultado = {};
-
-    partes.forEach((parte, index) => {
-        resultado[index === 0 ? 'nombre' : index === 1 && partes.length > 2 ? 'email' : 'password'] = decryptData(parte);
-    });
-
-    return resultado;
-}
-
-function decryptData(encryptedText) {
-    const key = Buffer.from(process.env.AES_PRIVATE_KEY, 'hex');
-    const [ivHex, authTagHex, encryptedHex] = encryptedText.split(':');
-    const iv = Buffer.from(ivHex, 'hex');
-    const authTag = Buffer.from(authTagHex, 'hex');
-    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
-    decipher.setAuthTag(authTag);
-    let decrypted = decipher.update(encryptedHex, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-    return decrypted;
+    try {
+        const dataObject = binaryToText(dataSegura);
+        console.log('La data desencriptada como objeto: ', dataObject);
+        return dataObject;
+    } catch (e) {
+        console.error('Error al procesar dataSegura', e);
+        throw new Error('Formato de dataSegura no válido');
+    }
 }
 
 async function comparePassword(passwordString, bdHash) {
@@ -64,7 +64,7 @@ function checkAuthenticated(req, res, next) {
         });
     } else {
         console.log('Usuario no autenticado, redirigiendo a /login');
-        res.redirect('usuarios/login');
+        res.redirect('/usuarios/login');
     }
 }
 
@@ -81,13 +81,15 @@ function generateToken(data, expirationTime) {
     return jwt.sign({ data }, process.env.RSA_PRIVATE_KEY, { algorithm: 'RS256', expiresIn: expirationTime });
 }
 
-function encryptData(text) {
-    const key = Buffer.from(process.env.AES_PRIVATE_KEY, 'hex');
-    const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
-    let encrypted = cipher.update(text, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-    return iv.toString('hex') + ':' + cipher.getAuthTag().toString('hex') + ':' + encrypted;
+function encryptData(data) {
+    try {
+        const binaryData = textToBinary(data);
+        console.log("Data en formato binario:", binaryData);
+        return binaryData;
+    } catch (error) {
+        console.error('Error al encriptar data:', error);
+        throw new Error('Error al encriptar data');
+    }
 }
 
 async function getHash(passwordString) {
@@ -104,5 +106,6 @@ module.exports = {
     checkNotAuthenticated,
     generateToken,
     encryptData,
+    decryptData: binaryToText,
     getHash
 };

@@ -29,7 +29,7 @@ async function register(req, res) {
         console.log("Usuario registrado: ", userId);
         
         // Redirige al usuario al login después del registro exitoso
-        res.redirect('/login');
+        res.redirect('/usuarios/login');
     } catch (error) {
         console.error(error);
         // Renderiza la página de registro con un mensaje de error
@@ -40,30 +40,44 @@ async function register(req, res) {
 async function loginUser(req, res) {
     const { correo, contrasenia } = req.body;
 
+    // Verifica si se proporcionaron correo y contraseña
+    if (!correo || !contrasenia) {
+        return res.render('login', { error: 'Correo y contraseña son requeridos.' });
+    }
+
     try {
         const user = await userModel.findUserByEmail(correo);
         console.log("Usuario: ", user);
+
+        // Verifica si se encontró al usuario
         if (!user) {
-            return res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
-        }
-        const passwordMatch = await bcrypt.compare(contrasenia, user.contrasenia_hashed);
-        console.log("Contraseña: ", passwordMatch);
-        if (!passwordMatch) {
-            console.log('Contraseña incorrecta');
-            return res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
+            return res.render('login', { error: 'Usuario no encontrado.' });
         }
 
+        // Compara las contraseñas
+        const passwordMatch = await bcrypt.compare(contrasenia, user.contrasenia_hashed);
+        console.log("Contraseña: ", passwordMatch);
+
+        // Verifica si la contraseña coincide
+        if (!passwordMatch) {
+            console.log('Contraseña incorrecta');
+            return res.render('login', { error: 'Contraseña incorrecta.' });
+        }
+
+        // Establece la sesión del usuario
         req.session.userId = user.id;
         console.log("Este es el usuario: ", req.session.userId);
 
+        // Genera y establece el token JWT
         const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log("El token de este usuario será: ", token);
         res.cookie('jwt', token, { httpOnly: true, secure: false });
 
+        // Redirige al usuario a la página de inicio
         res.redirect('/');
     } catch (error) {
         console.error('Error durante el proceso de inicio de sesión:', error);
-        res.render('login', { error: 'Error al encontrar al usuario. Inténtalo de nuevo.' });
+        res.render('login', { error: 'Error al iniciar sesión. Inténtalo de nuevo.' });
     }
 }
 
