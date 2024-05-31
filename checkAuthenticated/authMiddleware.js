@@ -3,20 +3,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 dotenv.config();
 
-// Función para convertir texto a binario
-function textToBinary(text) {
-    return text.split('').map(char => {
-        return char.charCodeAt(0).toString(2).padStart(8, '0');
-    }).join(' ');
-}
-
-// Función para convertir binario a texto
-function binaryToText(binary) {
-    return binary.split(' ').map(bin => {
-        return String.fromCharCode(parseInt(bin, 2));
-    }).join('');
-}
-
 function verificarToken(req, res, next) {
     const token = req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : null;
 
@@ -31,17 +17,6 @@ function verificarToken(req, res, next) {
         req.usuario = usuario;
         next();
     });
-}
-
-function verificarDatos(dataSegura) {
-    try {
-        const dataObject = binaryToText(dataSegura);
-        console.log('La data desencriptada como objeto: ', dataObject);
-        return dataObject;
-    } catch (e) {
-        console.error('Error al procesar dataSegura', e);
-        throw new Error('Formato de dataSegura no válido');
-    }
 }
 
 async function comparePassword(passwordString, bdHash) {
@@ -81,17 +56,6 @@ function generateToken(data, expirationTime) {
     return jwt.sign({ data }, process.env.RSA_PRIVATE_KEY, { algorithm: 'RS256', expiresIn: expirationTime });
 }
 
-function encryptData(data) {
-    try {
-        const binaryData = textToBinary(data);
-        console.log("Data en formato binario:", binaryData);
-        return binaryData;
-    } catch (error) {
-        console.error('Error al encriptar data:', error);
-        throw new Error('Error al encriptar data');
-    }
-}
-
 async function getHash(passwordString) {
     const saltRounds = parseInt(process.env.PASSWORD_SALT_ROUNDS);
     const password_hash = await bcrypt.hash(passwordString, saltRounds);
@@ -100,12 +64,9 @@ async function getHash(passwordString) {
 
 module.exports = {
     verificarToken,
-    verificarDatos,
     comparePassword,
     checkAuthenticated,
     checkNotAuthenticated,
     generateToken,
-    encryptData,
-    decryptData: binaryToText,
     getHash
 };
