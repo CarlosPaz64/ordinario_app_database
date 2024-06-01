@@ -163,27 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initTaskOptions();
 });
 
-
-// Deslogueo de la aplicación mediante una API Fetch
-document.getElementById('logout-link').addEventListener('click', function(event) {
-  event.preventDefault();
-  fetch('/logout', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
-  }).then(response => {
-    if (response.ok) {
-      window.location.href = '/login';
-    } else {
-      alert('Error al cerrar sesión');
-    }
-  }).catch(error => {
-    console.error('Error al cerrar sesión:', error);
-    alert('Error al cerrar sesión');
-  });
-});
 // Obtiene el elemento input de tipo date
 const inputDate = document.getElementById('fecha_finalizacion');
 const editDate = document.getElementById('edit-fecha_finalizacion');

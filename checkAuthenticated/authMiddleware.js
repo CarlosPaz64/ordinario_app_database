@@ -3,22 +3,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 dotenv.config();
 
-function verificarToken(req, res, next) {
-    const token = req.headers['authorization'] ? req.headers['authorization'].split(' ')[1] : null;
-
-    if (!token) {
-        return res.status(401).json({ mensaje: 'Token no proporcionado' });
-    }
-
-    jwt.verify(token, process.env.RSA_PRIVATE_KEY, { algorithm: 'RS256' }, (err, usuario) => {
-        if (err) {
-            return res.status(403).json({ mensaje: 'Token inválido' });
-        }
-        req.usuario = usuario;
-        next();
-    });
-}
-
 async function comparePassword(passwordString, bdHash) {
     const compareHashes = await bcrypt.compare(passwordString, bdHash);
     return compareHashes;
@@ -26,22 +10,38 @@ async function comparePassword(passwordString, bdHash) {
 
 function checkAuthenticated(req, res, next) {
     const token = req.cookies.jwt;
+    console.log("El token de la sesión es: ", token);
 
     if (token) {
-        jwt.verify(token, process.env.RSA_PRIVATE_KEY, (err, decoded) => {
-            if (err) {
-                console.log('JWT no válido, redirigiendo a /login');
-                return res.redirect('/login');
-            }
-            req.userId = decoded.userId;
-            console.log('Usuario autenticado con JWT:', decoded.userId);
+        // Envolver jwt.verify en una promesa
+        new Promise((resolve, reject) => {
+            jwt.verify(token, process.env.RSA_PRIVATE_KEY, (err, decoded) => {
+                if (err) {
+                    reject(err); // Rechazar la promesa si hay un error
+                } else {
+                    console.log('Token decodificado:', decoded); // Aquí imprimes el objeto decoded
+                    resolve(decoded); // Resolver la promesa con el token decodificado
+                }
+            });
+        })
+        .then(decoded => {
+            // Si el token es válido, continuar con el middleware
+            req.session.userId = decoded.data.userId; // Establece el userId en req.session
+            console.log('Usuario autenticado con JWT:', req.session.userId);
             next();
+        })
+        .catch(err => {
+            console.log('JWT no válido:', err);
+            // Si el token no es válido, redirigir al usuario a /usuarios/login
+            res.redirect('/usuarios/login');
         });
     } else {
         console.log('Usuario no autenticado, redirigiendo a /login');
+        // Redirigir al usuario al login si no hay token en las cookies
         res.redirect('/usuarios/login');
     }
 }
+
 
 function checkNotAuthenticated(req, res, next) {
     if (!req.session.userId && !req.userId) {
@@ -58,7 +58,6 @@ function generateToken(data, expirationTime) {
 
 
 module.exports = {
-    verificarToken,
     comparePassword,
     checkAuthenticated,
     checkNotAuthenticated,

@@ -45,27 +45,35 @@ async function loginUser(req, res) {
 
     try {
         // Intenta encontrar al usuario por correo electrónico
-        const usuario = await userModel.findUserByEmail(correo, contrasenia);
+        const response = await fetch('http://localhost:3002/usuarios/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ correo, contrasenia })
+        });
+        const data = await response.json();
 
-        // Si el usuario se encontró, establece la sesión del usuario y redirige a la página de inicio
-        if (usuario) {
-            req.session.userId = usuario.id;
-            return res.redirect('/');
-        } else {
-            // Si no se encontró el usuario, muestra un mensaje de error
-            return res.render('login', { error: 'Usuario no encontrado o contraseña incorrecta.' });
-        }
+        // Si hay un token en la respuesta, puedes almacenarlo o utilizarlo según sea necesario
+        const token = data.token;
+        console.log('Token recibido:', token);
+
+        // Establecer el token como una cookie en la respuesta
+        res.cookie('jwt', token, { httpOnly: true });
+
+        // Redirigir al usuario a la página principal o realizar otras acciones según sea necesario
+        res.redirect('/');
     } catch (error) {
         console.error('Error durante el proceso de inicio de sesión:', error);
         res.render('login', { error: 'Error al iniciar sesión. Inténtalo de nuevo.' });
     }
 }
 
-
 function logoutUser(req, res) {
     req.session.destroy((err) => {
         console.log("Se va a destruir la sesión");
         if (err) {
+            console.error('Error al destruir la sesión:', err);
             return res.status(500).send('Error al cerrar sesión');
         }
         res.redirect('/login');

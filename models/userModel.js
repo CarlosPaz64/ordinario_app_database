@@ -47,14 +47,30 @@ async function findUserByEmail(correo, contrasenia) {
 
 // Función para buscar un usuario por su ID
 async function findUserById(userId) {
-
     try {
-        const response = await axios.get(`${process.env.BASE_URL}/usuarios/${userId}`, axiosConfig);
-        const userData = response.data;
-        return new Usuario(userData.id, userData.nombre, userData.apellidos, userData.correo);
+        // Realiza una solicitud GET al backend para obtener los datos del usuario por su ID
+        const response = await axios.get(`${process.env.BASE_URL}/usuarios/${userId}`);
+        
+        // Verifica si la respuesta tiene datos y devuelve los datos del usuario si los hay
+        if (response && response.data) {
+            const userData = response.data;
+            // Aquí puedes devolver los datos del usuario de la forma adecuada
+            // Por ejemplo, podrías devolver un objeto con las propiedades del usuario
+            return {
+                id: userData.id,
+                nombre: userData.nombre,
+                apellidos: userData.apellidos,
+                correo: userData.correo
+            };
+        } else {
+            // Si la respuesta no tiene datos, lanza una excepción indicando que no se encontró el usuario
+            throw new Error('Usuario no encontrado');
+        }
     } catch (error) {
+        // Maneja cualquier error que pueda ocurrir durante la solicitud GET
         console.error('Error al buscar usuario por ID:', error);
-        throw error; // Lanza el error para manejarlo en el servidor
+        // Lanza el error para manejarlo en el servidor
+        throw error;
     }
 }
 

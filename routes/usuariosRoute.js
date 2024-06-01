@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const userModel = require('../models/userModel');
 const { checkAuthenticated } = require('../checkAuthenticated/authMiddleware');
 const { getTasksByUserId, getRecentTasks, getTasksByStatus } = require('../models/tasksModel'); // Importa la función para obtener los usuarios
 
@@ -26,6 +27,8 @@ router.post('/login', userController.loginUser);
 // Ruta para desloguear usuarios
 // Ruta para cerrar sesión
 router.post('/logout', userController.logoutUser);
+
+router.get('/:id', userModel.findUserById);
 
 
 module.exports = router;

@@ -24,7 +24,7 @@ async function createTask(descripcion, estatus, fecha_finalizacion, importancia,
     };
 
     try {
-        const response = await axios.post(`${process.env.BASE_URL}/tasks`, {
+        const response = await axios.post(`${process.env.BASE_URL}/tasks/create-task`, {
             descripcion,
             estatus,
             fecha_finalizacion,
@@ -191,7 +191,7 @@ async function getTasksByStatus(id_usuario, token) {
 }
 
 // Función para obtener las tareas recientes de un usuario
-async function getRecentTasks(id_usuario, limit = 5, token) {
+async function getRecentTasks(id_usuario, token) {
     const axiosConfig = {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -199,7 +199,7 @@ async function getRecentTasks(id_usuario, limit = 5, token) {
     };
 
     try {
-        const response = await axios.get(`${process.env.BASE_URL}/tasks/recent/${id_usuario}?limit=${limit}`, axiosConfig);
+        const response = await axios.get(`${process.env.BASE_URL}/tasks/recent/${id_usuario}`, axiosConfig);
         return response.data.map(task => new Tarea(
             task.id,
             task.descripcion,

@@ -9,6 +9,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const userModel = require('./models/userModel') // Importa el modelo de los usuarios
 const { checkAuthenticated, checkNotAuthenticated } = require('./checkAuthenticated/authMiddleware');
 const bodyParser = require('body-parser');
+const { getTasksByStatus, getRecentTasks, getTasksByUserId } = require('./models/tasksModel'); 
 
 
 // Configura DotEnv
@@ -92,7 +93,7 @@ app.get('/content', checkAuthenticated, async (req, res) => {
 
 app.get('/', checkAuthenticated, async (req, res) => {
   try {
-      const user = await userModel.findUserById(req.userId); // Encuentra al usuario por su ID de usuario decodificado del token JWT
+      const user = await userModel.findUserById(req.session.userId); // Encuentra al usuario por su ID de usuario decodificado del token JWT
       if (!user) {
           throw new Error('Usuario no encontrado');
       }
@@ -127,6 +128,24 @@ app.get('/', checkAuthenticated, async (req, res) => {
   }
 });
 
+app.get('/logout', async (req, res) => {
+  await req.logout(async (err) => {
+    if (err) {
+      // Manejo del error, si es necesario
+      console.error(err);
+    }
+    //req.session.destroy(); // Eliminar la sesión completa
+    await req.session.destroy((err) => {
+      if (err) {
+        console.error('Error al destruir la sesión:', err);
+        return res.status(500).send('Hola soy Joshua');
+      }
+      console.log('req.session.destroy finalizado correctamente');
+    });
+    res.clearCookie('token');
+    res.redirect('/usuarios/login'); // Redirigir a la página principal u otra página de tu elección
+  });
+});
 
 // Manejo de errores
 app.use((err, req, res, next) => {

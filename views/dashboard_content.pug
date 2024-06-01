@@ -90,7 +90,7 @@ section.dashboard
   .modal-content
     span.closing &times;
     p Add a task:
-    form(id="task-form", action="/create-task", method="post")
+    form(id="task-form", action="/tasks/create-task", method="post")
       input(type="hidden", id="task-id", name="id")
       label(for="descripcion") Description:
       textarea(placeholder="Description", maxlength="100", name="descripcion" required)
