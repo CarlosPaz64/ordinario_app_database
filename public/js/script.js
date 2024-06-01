@@ -310,27 +310,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Manejo de edición de tareas
+  // Editar tarea
   editButtons.forEach(function(button) {
     button.addEventListener('click', function() {
       var taskId = this.getAttribute('data-task-id');
-      fetch(`/tasks/${taskId}`)
-        .then(response => response.json())
-        .then(task => {
-          document.getElementById('edit-task-id').value = task.id;
-          document.getElementById('edit-descripcion').value = task.descripcion;
-          document.getElementById('edit-fecha_finalizacion').value = task.fecha_finalizacion.split('T')[0]; // Solo la fecha, sin la hora
-          document.getElementById('edit-importancia').value = task.importancia;
-          editForm.action = `/tasks/update-task/${task.id}`;
-          editForm.method = 'POST';
-          editModal.style.display = "block";
-        })
-        .catch(error => {
-          console.error('Error fetching task:', error);
-          alert('Error fetching task: ' + error.message);
-        });
+      var taskDescription = this.getAttribute('data-task-description');
+      var taskDate = this.getAttribute('data-task-date');
+      var taskImportance = this.getAttribute('data-task-importance');
+  
+      // Populate the modal with task data
+      document.getElementById('edit-task-id').value = taskId;
+      document.getElementById('edit-descripcion').value = taskDescription;
+      document.getElementById('edit-fecha_finalizacion').value = taskDate;
+      document.getElementById('edit-importancia').value = taskImportance;
+  
+      // Open the modal
+      editModal.style.display = "block";
     });
   });
+  
+  
+  
+
 
   closeEditBtn.addEventListener('click', function() {
     editModal.style.display = "none";

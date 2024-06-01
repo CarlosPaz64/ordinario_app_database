@@ -20,7 +20,7 @@ function handleServerError(res, error) {
 async function getTask(req, res) {
     const taskId = req.params.id;
     try {
-        const task = await tasksModel.getTaskById(taskId);
+        const task = await tasksModel.updateTask(taskId);
         if (task) {
             sendSuccessResponse(res, task);
         } else {
@@ -54,7 +54,7 @@ async function updateTask(req, res) {
 
     try {
         console.log("Intentado de actualizar la tarea: ", req.body);
-        await tasksModel.updateIdTask(taskId, descripcion, estatus, fecha_finalizacion, importancia);
+        await tasksModel.updateTask(taskId, descripcion, estatus, fecha_finalizacion, importancia);
         res.redirect('/content'); // Redirige a la página principal después de actualizar la tarea
     } catch (error) {
         console.error('Error al actualizar la tarea:', error);

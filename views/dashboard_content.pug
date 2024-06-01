@@ -28,7 +28,7 @@ section.dashboard
                     button.task__options
                       i.fas.fa-ellipsis-h
                     .options-menu
-                      button.option-btn.edit-btn(data-task-id=task.id) Editar
+                      button.option-btn.edit-btn(data-task-id=task.id, data-task-description=task.descripcion, data-task-date=new Date(task.fecha_finalizacion).toISOString().split('T')[0], data-task-importance=task.importancia) Editar
                       button.option-btn.delete-btn(data-task-id=task.id) Eliminar
                   p= task.descripcion
                   .task__stats
@@ -51,7 +51,7 @@ section.dashboard
                     button.task__options
                       i.fas.fa-ellipsis-h
                     .options-menu
-                      button.option-btn.edit-btn(data-task-id=task.id) Editar
+                      button.option-btn.edit-btn(data-task-id=task.id, data-task-description=task.descripcion, data-task-date=new Date(task.fecha_finalizacion).toISOString().split('T')[0], data-task-importance=task.importancia) Editar
                       button.option-btn.delete-btn(data-task-id=task.id) Eliminar
                   p= task.descripcion
                   .task__stats
@@ -74,7 +74,7 @@ section.dashboard
                     button.task__options
                       i.fas.fa-ellipsis-h
                     .options-menu
-                      button.option-btn.edit-btn(data-task-id=task.id) Editar
+                      button.option-btn.edit-btn(data-task-id=task.id, data-task-description=task.descripcion, data-task-date=new Date(task.fecha_finalizacion).toISOString().split('T')[0], data-task-importance=task.importancia) Editar
                       button.option-btn.delete-btn(data-task-id=task.id) Eliminar
                   p= task.descripcion
                   .task__stats
@@ -110,16 +110,16 @@ section.dashboard
   .modal-content
     span.closing &times;
     p Edit task:
-    form(id="edit-task-form", action="/tasks/update-task", method="post")
+    form(id="edit-task-form", action=`/tasks/update-task/${taskId}`, method="post")
       input(type="hidden", id="edit-task-id", name="id")
       label(for="edit-descripcion") Description:
-      textarea(placeholder="Description", id="edit-descripcion", maxlength="100", name="descripcion" required)
+      textarea(placeholder="Description", id="edit-descripcion", maxlength="100", name="descripcion", required)
       br
       label(for="edit-fecha_finalizacion") Due to:
-      input(type="date", id="edit-fecha_finalizacion", name="fecha_finalizacion" required)
+      input(type="date", id="edit-fecha_finalizacion", name="fecha_finalizacion", required)
       br
       label(for="edit-importancia") Select priority:
-      select(id="edit-importancia", name="importancia" required)
+      select(id="edit-importancia", name="importancia", required)
         option(value="critical") Critical
         option(value="important") Important
         option(value="optional") Optional

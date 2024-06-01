@@ -72,7 +72,7 @@ async function updateTask(id, descripcion, estatus, fecha_finalizacion, importan
     };
 
     try {
-        await axios.put(`${process.env.BASE_URL}/tasks/${id}`, {
+        await axios.post(`${process.env.BASE_URL}/tasks/update-task/${id}`, {
             descripcion,
             estatus,
             fecha_finalizacion,
