@@ -56,17 +56,11 @@ function generateToken(data, expirationTime) {
     return jwt.sign({ data }, process.env.RSA_PRIVATE_KEY, { algorithm: 'RS256', expiresIn: expirationTime });
 }
 
-async function getHash(passwordString) {
-    const saltRounds = parseInt(process.env.PASSWORD_SALT_ROUNDS);
-    const password_hash = await bcrypt.hash(passwordString, saltRounds);
-    return password_hash;
-}
 
 module.exports = {
     verificarToken,
     comparePassword,
     checkAuthenticated,
     checkNotAuthenticated,
-    generateToken,
-    getHash
+    generateToken
 };

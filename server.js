@@ -16,7 +16,7 @@ dotenv.config();
 
 const app = express();
 // Parsea las solicitudes con el tipo de contenido 'application/x-www-form-urlencoded'
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Parsea las solicitudes con el tipo de contenido 'application/json'
 app.use(bodyParser.json());

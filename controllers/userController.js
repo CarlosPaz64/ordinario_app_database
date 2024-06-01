@@ -21,11 +21,8 @@ function handleServerError(res, error) {
 async function register(req, res) {
     const { nombre, apellidos, correo, contrasenia } = req.body;
     try {
-        // Hash de la contraseña
-        const hashedPassword = await bcrypt.hash(contrasenia, 10); // El segundo argumento es el número de rondas de encriptación
-
         // Registra el usuario con la contraseña hasheada
-        const userId = await userModel.registerUser(nombre, apellidos, correo, hashedPassword);
+        const userId = await userModel.registerUser(nombre, apellidos, correo, contrasenia);
         console.log("Usuario registrado: ", userId);
         
         // Redirige al usuario al login después del registro exitoso
@@ -39,6 +36,7 @@ async function register(req, res) {
 
 async function loginUser(req, res) {
     const { correo, contrasenia } = req.body;
+    console.log('Este es el cuerpo de la solicitud: ', req.body);
 
     // Verifica si se proporcionaron correo y contraseña
     if (!correo || !contrasenia) {
@@ -46,40 +44,23 @@ async function loginUser(req, res) {
     }
 
     try {
-        const user = await userModel.findUserByEmail(correo);
-        console.log("Usuario: ", user);
+        // Intenta encontrar al usuario por correo electrónico
+        const usuario = await userModel.findUserByEmail(correo, contrasenia);
 
-        // Verifica si se encontró al usuario
-        if (!user) {
-            return res.render('login', { error: 'Usuario no encontrado.' });
+        // Si el usuario se encontró, establece la sesión del usuario y redirige a la página de inicio
+        if (usuario) {
+            req.session.userId = usuario.id;
+            return res.redirect('/');
+        } else {
+            // Si no se encontró el usuario, muestra un mensaje de error
+            return res.render('login', { error: 'Usuario no encontrado o contraseña incorrecta.' });
         }
-
-        // Compara las contraseñas
-        const passwordMatch = await bcrypt.compare(contrasenia, user.contrasenia_hashed);
-        console.log("Contraseña: ", passwordMatch);
-
-        // Verifica si la contraseña coincide
-        if (!passwordMatch) {
-            console.log('Contraseña incorrecta');
-            return res.render('login', { error: 'Contraseña incorrecta.' });
-        }
-
-        // Establece la sesión del usuario
-        req.session.userId = user.id;
-        console.log("Este es el usuario: ", req.session.userId);
-
-        // Genera y establece el token JWT
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        console.log("El token de este usuario será: ", token);
-        res.cookie('jwt', token, { httpOnly: true, secure: false });
-
-        // Redirige al usuario a la página de inicio
-        res.redirect('/');
     } catch (error) {
         console.error('Error durante el proceso de inicio de sesión:', error);
         res.render('login', { error: 'Error al iniciar sesión. Inténtalo de nuevo.' });
     }
 }
+
 
 function logoutUser(req, res) {
     req.session.destroy((err) => {

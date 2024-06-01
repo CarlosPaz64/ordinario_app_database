@@ -7,7 +7,7 @@ html(lang="en" dir="ltr")
     link(rel="stylesheet" href="/css/register.css")
   body
     .wrapper
-      h2 Login
+      h2 Register
       form(action="/usuarios/register" method="POST")
         if error
           p=error
@@ -23,7 +23,7 @@ html(lang="en" dir="ltr")
           input(type="checkbox" required)
           h3 I accept all terms & condition
         .input-box.button
-          input(type="submit" value="Login")
+          input(type="submit" value="Register")
         .text
-          h3 Already have an account? Log in now! 
-            a(href="/login") Register now
+          h3 Already have an account?
+            a(href="/usuarios/login") Log in now!
