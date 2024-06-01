@@ -324,6 +324,9 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('edit-fecha_finalizacion').value = taskDate;
       document.getElementById('edit-importancia').value = taskImportance;
   
+      // Update the form action with the task ID
+      editForm.action = `/tasks/update-task/${taskId}`;
+  
       // Open the modal
       editModal.style.display = "block";
     });

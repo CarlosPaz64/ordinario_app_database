@@ -142,7 +142,7 @@ async function toggleTaskStatus(id, token) {
         }
 
         // Actualizar el estatus
-        await axios.put(`${process.env.BASE_URL}/tasks/${id}/status`, { estatus: newStatus }, axiosConfig);
+        await axios.post(`${process.env.BASE_URL}/tasks/${id}/toggle-status`, { estatus: newStatus }, axiosConfig);
 
         // Actualizar el registro del estado anterior si se ha cambiado a "Done"
         if (currentStatus !== 'Done') {

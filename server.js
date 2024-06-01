@@ -134,7 +134,8 @@ app.get('/logout', async (req, res) => {
       // Manejo del error, si es necesario
       console.error(err);
     }
-    //req.session.destroy(); // Eliminar la sesión completa
+    
+    // Destruir la sesión incluyendo req.session.userId
     await req.session.destroy((err) => {
       if (err) {
         console.error('Error al destruir la sesión:', err);
@@ -142,10 +143,15 @@ app.get('/logout', async (req, res) => {
       }
       console.log('req.session.destroy finalizado correctamente');
     });
-    res.clearCookie('token');
-    res.redirect('/usuarios/login'); // Redirigir a la página principal u otra página de tu elección
+
+    // Eliminar la cookie jwt
+    res.clearCookie('jwt');
+    
+    // Redirigir a la página de login
+    res.redirect('/usuarios/login'); 
   });
 });
+
 
 // Manejo de errores
 app.use((err, req, res, next) => {
