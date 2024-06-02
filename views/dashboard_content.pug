@@ -68,7 +68,7 @@ section.dashboard
           .project-column-tasks(data-status="Done")
             each task in tasks
               if task.estatus === 'Done'
-                .task(draggable="true")
+                .task(draggable="true", class="checked")
                   .task__tags
                     span.task__tag(class="task__tag--" + task.importancia)= task.importancia
                     button.task__options

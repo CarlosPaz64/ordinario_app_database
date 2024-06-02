@@ -1,7 +1,7 @@
 // Theme toggler 
 const body = document.querySelector("body"),
-      modeToggle = body.querySelector(".mode-toggle");
-      sidebar = body.querySelector("nav");
+      modeToggle = body.querySelector(".mode-toggle"),
+      sidebar = body.querySelector("nav"),
       sidebarToggle = body.querySelector(".sidebar-toggle");
 
 let getMode = localStorage.getItem("mode");
@@ -37,64 +37,61 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     var dragSrcEl = null;
     var dragSrcColumn = null;
-  
+
     function handleDragStart(e) {
       this.style.opacity = '0.1';
       this.style.border = '3px dashed #c4cad3';
-  
+
       dragSrcEl = this;
       dragSrcColumn = this.parentElement;
-  
+
       e.dataTransfer.effectAllowed = 'move';
       e.dataTransfer.setData('text/html', this.innerHTML);
     }
-  
+
     function handleDragOver(e) {
       if (e.preventDefault) {
         e.preventDefault();
       }
-  
+
       e.dataTransfer.dropEffect = 'move';
       return false;
     }
-  
+
     function handleDragEnter(e) {
       this.classList.add('task-hover');
     }
-  
+
     function handleDragLeave(e) {
       this.classList.remove('task-hover');
     }
-  
+
     function handleDrop(e) {
       if (e.stopPropagation) {
         e.stopPropagation(); // stops the browser from redirecting.
       }
-  
+
       // Ensure the drop is within the same column
       if (dragSrcEl != this && dragSrcColumn === this.parentElement) {
         dragSrcEl.innerHTML = this.innerHTML;
         this.innerHTML = e.dataTransfer.getData('text/html');
       }
 
-      // Reasignar eventos de arrastre y soltar
-      initDragAndDrop();
-      // Reasignar eventos para las opciones y el estado de la tarea
-      initTaskOptions();
-      initTaskStatusToggle();
-  
+      // Reasignar eventos
+      initEvents();
+
       return false;
     }
-  
+
     function handleDragEnd(e) {
       this.style.opacity = '1';
       this.style.border = 0;
-  
+
       items.forEach(function (item) {
         item.classList.remove('task-hover');
       });
     }
-  
+
     let items = document.querySelectorAll('.task');
     items.forEach(function(item) {
       item.addEventListener('dragstart', handleDragStart, false);
@@ -105,43 +102,42 @@ document.addEventListener('DOMContentLoaded', (event) => {
       item.addEventListener('dragend', handleDragEnd, false);
     });
   });
-  
 
-// Script de la vista modal para agregar tareas 
+  // Script de la vista modal para agregar tareas 
 document.addEventListener('DOMContentLoaded', (event) => {
-    // Get the modal
-    var modal = document.getElementById("myModal");
-  
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-  
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("closing")[0];
-  
-    // When the user clicks the button, open the modal 
-    btn.onclick = function() {
-      modal.style.display = "block";
-    }
-  
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
+  // Get the modal
+  var modal = document.getElementById("myModal");
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("myBtn");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("closing")[0];
+
+  // When the user clicks the button, open the modal 
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
       modal.style.display = "none";
     }
-  
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-  });
-  
+  }
+});
 
 // Script para mostrar las operaciones del CRUD
 function initTaskOptions() {
   // Toggle the visibility of the options menu on button click
   document.querySelectorAll('.task__options').forEach(button => {
     button.addEventListener('click', (event) => {
+      event.stopPropagation();
       const optionsMenu = event.target.closest('.task__tags').querySelector('.options-menu');
       // Toggle the display of the options menu
       optionsMenu.style.display = optionsMenu.style.display === 'block' ? 'none' : 'block';
@@ -158,46 +154,13 @@ function initTaskOptions() {
   });
 }
 
-// Inicializar las opciones de tarea
-document.addEventListener('DOMContentLoaded', () => {
-  initTaskOptions();
-});
-
-// Obtiene el elemento input de tipo date
-const inputDate = document.getElementById('fecha_finalizacion');
-const editDate = document.getElementById('edit-fecha_finalizacion');
-
-// Obtiene la fecha actual en formato yyyy-mm-dd
-const today = new Date();
-
-// Formatea la fecha actual en formato yyyy-mm-dd
-const year = today.getFullYear();
-let month = today.getMonth() + 1;
-let day = today.getDate();
-
-// Agrega un cero delante si el mes o el día son menores que 10
-if (month < 10) {
-  month = '0' + month;
-}
-if (day < 10) {
-  day = '0' + day;
-}
-
-// Obtiene la fecha actual en formato yyyy-mm-dd
-const currentDate = `${year}-${month}-${day}`;
-
-// Establece la fecha mínima como la fecha actual
-inputDate.setAttribute('min', currentDate);
-editDate.setAttribute('min', currentDate);
-
-
-
 // Sobrepone una línea para marcar como Done la tarea (falta funcionalidad en la base de datos)
 function initTaskStatusToggle() {
   var checkButtons = document.querySelectorAll('.fas.fa-check');
 
   checkButtons.forEach(function(button) {
-    button.addEventListener('click', async function() {
+    button.addEventListener('click', async function(event) {
+      event.stopPropagation();
       var taskId = this.getAttribute('data-task-id');
       var taskElement = this.closest('.task');
 
@@ -211,7 +174,7 @@ function initTaskStatusToggle() {
 
         let result = await response.json();
         if (result.success) {
-          // Actualiza la clase 'checked' según el nuevo estatus
+          // Actualiza la clase 'checked' según el nuevo estatus solo después de la confirmación del servidor
           if (result.status === 'Done') {
             taskElement.classList.add('checked');
           } else {
@@ -239,12 +202,10 @@ function initTaskStatusToggle() {
           if (newColumn) {
             newColumn.appendChild(taskElement);
           }
-
-          // Reactivar los eventos de arrastrar y soltar
-          initDragAndDrop();
-          // Reactivar los eventos para las opciones
-          initTaskOptions();
-
+          // Refrescar la página después de un pequeño retraso para asegurar que los cambios se guardaron correctamente
+          setTimeout(() => {
+            location.reload();
+          }, 500);
         } else {
           console.error('Error al actualizar el estatus de la tarea:', result.message);
         }
@@ -255,22 +216,16 @@ function initTaskStatusToggle() {
   });
 }
 
+function initEvents() {
+  initTaskOptions();
+  initTaskStatusToggle();
+  initDragAndDrop();
+}
+
 // Inicializar el estatus de tarea
 document.addEventListener('DOMContentLoaded', () => {
-  initTaskStatusToggle();
-  initTaskOptions();
-  initDragAndDrop();
+  initEvents();
 });
-
-
-// Inicializar el estatus de tarea
-document.addEventListener('DOMContentLoaded', () => {
-  initTaskStatusToggle();
-  initTaskOptions();
-  initDragAndDrop();
-});
-
-
 
 // Script del CRUD de la aplicación
 document.addEventListener('DOMContentLoaded', () => {
@@ -317,24 +272,20 @@ document.addEventListener('DOMContentLoaded', () => {
       var taskDescription = this.getAttribute('data-task-description');
       var taskDate = this.getAttribute('data-task-date');
       var taskImportance = this.getAttribute('data-task-importance');
-  
+
       // Populate the modal with task data
       document.getElementById('edit-task-id').value = taskId;
       document.getElementById('edit-descripcion').value = taskDescription;
       document.getElementById('edit-fecha_finalizacion').value = taskDate;
       document.getElementById('edit-importancia').value = taskImportance;
-  
+
       // Update the form action with the task ID
       editForm.action = `/tasks/update-task/${taskId}`;
-  
+
       // Open the modal
       editModal.style.display = "block";
     });
   });
-  
-  
-  
-
 
   closeEditBtn.addEventListener('click', function() {
     editModal.style.display = "none";
@@ -345,4 +296,33 @@ document.addEventListener('DOMContentLoaded', () => {
       editModal.style.display = "none";
     }
   };
+});
+
+// Script para establecer la fecha mínima en los inputs de fecha
+document.addEventListener('DOMContentLoaded', (event) => {
+  const inputDate = document.getElementById('fecha_finalizacion');
+  const editDate = document.getElementById('edit-fecha_finalizacion');
+
+  // Obtiene la fecha actual en formato yyyy-mm-dd
+  const today = new Date();
+
+  // Formatea la fecha actual en formato yyyy-mm-dd
+  const year = today.getFullYear();
+  let month = today.getMonth() + 1;
+  let day = today.getDate();
+
+  // Agrega un cero delante si el mes o el día son menores que 10
+  if (month < 10) {
+    month = '0' + month;
+  }
+  if (day < 10) {
+    day = '0' + day;
+  }
+
+  // Obtiene la fecha actual en formato yyyy-mm-dd
+  const currentDate = `${year}-${month}-${day}`;
+
+  // Establece la fecha mínima como la fecha actual
+  inputDate.setAttribute('min', currentDate);
+  editDate.setAttribute('min', currentDate);
 });
