@@ -139,7 +139,7 @@ app.get('/logout', async (req, res) => {
     await req.session.destroy((err) => {
       if (err) {
         console.error('Error al destruir la sesión:', err);
-        return res.status(500).send('Hola soy Joshua');
+        return res.status(500).send('No se pudo destruir la sesión');
       }
       console.log('req.session.destroy finalizado correctamente');
     });
