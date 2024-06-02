@@ -326,3 +326,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
   inputDate.setAttribute('min', currentDate);
   editDate.setAttribute('min', currentDate);
 });
+
+
+// Script del buscador de las tareas:
+document.addEventListener('DOMContentLoaded', () => {
+  const searchBox = document.querySelector('.search-box input[type="text"]');
+
+  searchBox.addEventListener('input', function() {
+    const searchTerm = searchBox.value.toLowerCase();
+    const tasks = document.querySelectorAll('.task');
+
+    tasks.forEach(task => {
+      const taskDescription = task.querySelector('p').innerText.toLowerCase();
+      if (taskDescription.includes(searchTerm)) {
+        task.style.display = 'block';
+      } else {
+        task.style.display = 'none';
+      }
+    });
+  });
+});
