@@ -3,9 +3,9 @@ Este proyecto contiene la funcionalidad de de AXIOS y las vistas que operan con 
 ## Aplicación de gestión de tareas
 Esta aplicación permite organizar tus tareas de manera fácil y sencilla mediante una interfaz clara y concisa. Actualmente, tiene dos apartados: el dashboard y el content. 
 * **Dashboard**:
-  En el dashboard principal podrás ver tu nombre junto con el hisorial de las tareas.
+  En el dashboard principal podrás ver tu nombre junto con el hisorial de las tareas, así como también tres contadores que tendrán el total de tareas que tengas dependiendo de su estatus (To do, Doing y Done).
 * **Content**:
-  En esta vista podrás realizar las operaciones CRUD _(Create, Read, Update, Delete)_ de la aplicación. Así mismo, podrás marcar tus tareas como hechas cuando clickeas al botón azul de la palomita que tiene la tarjeta de la tarea.
+  En esta vista podrás realizar las operaciones CRUD _(Create, Read, Update, Delete)_ de la aplicación. Para crear una tarea, debes darle click al botón con el signo de "+" para desplegar el modal con el formulario del registro. Para editar o borrar la tarea, se deberá de dar click a los tres puntos que tiene en la esquina superior derecha que tiene el contenedor del cuadrito o tarjetita de la tarea. Así mismo, podrás marcar tus tareas como hechas cuando clickeas al botón azul de la palomita que tiene la tarjeta de la tarea. Su funcionalidad es bastante clara. Las tareas se acomodarán dependiendo de la fecha de finalización que estas tengan. Si la fecha para termino de la tarea es el día de hoy, esta se acomodará por defecto en Doing. Si es otra fecha futura, entonces se irá a To do. Para que una tarea tenga el estatus de Done, el usuario deberá de marcar la tarea en cuestión como terminada (mediante la palomita azul) para que esta se acomode automaticamente en esa columna.
 ### Requisitos que la aplicación funcione:
 + Tener instalado el proyecto de la API ([Dar click aquí para ver](https://github.com/CarlosPaz64/ordinario_app_api.git))
 + Considerar el siguiente esquema de la base (Ya viene en el proyecto de la API pero por si las dudas):
@@ -48,5 +48,5 @@ RSA_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\nMIIJJgIBAAKCAgBeSgjz2qIJxJW/R3
 BASE_URL=http://localhost:3002
 PASSWORD_SALT_ROUNDS=10
 ```
-> **NOTA IMPORTANTE:** Las variables de entorno (a excepción de la clave RSA) deberán de ajustarse a tus necesidades.
+> **NOTA IMPORTANTE:** Las variables de entorno (a excepción de la clave RSA debido a que ya viene conofigurada en ambos servidores) deberán de ajustarse a tus necesidades.
 + Por último, se deberá de tener encendido el servidor de la aplicación para que axios funcione y consuma la API.
