@@ -49,7 +49,7 @@ async function updateTask(req, res) {
     // Obtener la fecha de hoy en formato yyyy-mm-dd
     const today = getLocalDate();
 
-    // Verificar si la fecha de finalización es igual a la fecha de hoy
+    // Verifica si la fecha de finalización es igual a la fecha de hoy
     const estatus = fecha_finalizacion === today ? 'Doing' : 'To do';
 
     try {

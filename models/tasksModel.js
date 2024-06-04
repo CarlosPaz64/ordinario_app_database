@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 // Configura DotEnv
 dotenv.config();
 
+// Constructor del mapeo de tasks o tareas
 class Tarea {
     constructor(id, descripcion, estatus, fecha_finalizacion, importancia, id_usuario) {
         this.id = id;

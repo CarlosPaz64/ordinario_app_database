@@ -42,7 +42,7 @@ function checkAuthenticated(req, res, next) {
     }
 }
 
-
+// Función para proteger las vistas sin autenticación
 function checkNotAuthenticated(req, res, next) {
     if (!req.session.userId && !req.userId) {
         console.log('Usuario no autenticado');
@@ -52,6 +52,7 @@ function checkNotAuthenticated(req, res, next) {
     res.redirect('/');
 }
 
+// Función que genera el token
 function generateToken(data, expirationTime) {
     return jwt.sign({ data }, process.env.RSA_PRIVATE_KEY, { algorithm: 'RS256', expiresIn: expirationTime });
 }

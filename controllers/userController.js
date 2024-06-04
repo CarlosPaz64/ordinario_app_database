@@ -69,6 +69,7 @@ async function loginUser(req, res) {
     }
 }
 
+// Función que llama al deslogueo del usuario
 function logoutUser(req, res) {
     req.session.destroy((err) => {
         console.log("Se va a destruir la sesión");
