@@ -35,6 +35,48 @@ CREATE TABLE IF NOT EXISTS tasks(
 
 -- DROP DATABASE tasks_organizer;
 ```
++ Dependencias utilizadas:
+```
+{
+  "name": "ordinario_app_database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile-sass": "sass styles/sass:public/css",
+    "see-sass": "sass -w styles/sass:public/css",
+    "nodemon-server": "nodemon server.js",
+    "start": "npm-run-all --parallel see-sass nodemon-server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "1.7.2",
+    "bcrypt": "5.1.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "1.20.2",
+    "connect-flash": "0.1.1",
+    "cookie-parser": "1.4.6",
+    "dotenv": "16.4.5",
+    "express": "4.19.2",
+    "express-session": "1.18.0",
+    "jsonwebtoken": "9.0.2",
+    "mysql2": "^3.10.0",
+    "nodemon": "3.1.0",
+    "passport": "0.7.0",
+    "passport-local": "1.0.0",
+    "pug": "^3.0.3",
+    "sass": "1.77.1"
+  },
+  "devDependencies": {
+    "npm-run-all": "4.1.5"
+  }
+}
+
+```
+
 + Configurar variables de entorno:
 ```
 DB_CONNECTIONS=10
