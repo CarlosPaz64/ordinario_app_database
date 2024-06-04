@@ -23,10 +23,10 @@ section.dashboard
     .activity
       .title
         i(class="uil uil-clock-three")
-        span.text Task's record of #{user.nombre} #{user.apellidos}
+        span.text Recent tasks of #{user.nombre} #{user.apellidos}
       .activity-data
         .data.names
-          span.data-title Nombre
+          span.data-title Task
           each task in recentTasks
             span.data-list= task.descripcion
         .data.email
@@ -34,10 +34,10 @@ section.dashboard
           each task in recentTasks
             span.data-list= user.correo
         .data.joined
-          span.data-title Fecha
+          span.data-title Due date
           each task in recentTasks
-            span.data-list #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+            span.data-list #{new Date(task.fecha_finalizacion).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })}
         .data.type
-          span.data-title Estatus
+          span.data-title Status
           each task in recentTasks
             span.data-list= task.estatus

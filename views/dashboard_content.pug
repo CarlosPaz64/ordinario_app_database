@@ -34,7 +34,7 @@ section.dashboard
                   .task__stats
                     span
                       time(datetime=task.fecha_finalizacion)
-                        i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+                        i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })}
                     span.task__owner
                       i.fas.fa-check(data-task-id=task.id, class=task.estatus === 'Done' ? 'checked' : '')
 
@@ -57,7 +57,7 @@ section.dashboard
                   .task__stats
                     span
                       time(datetime=task.fecha_finalizacion)
-                        i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+                        i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })}
                     span.task__owner
                       i.fas.fa-check(data-task-id=task.id, class=task.estatus === 'Done' ? 'checked' : '')
 
@@ -80,7 +80,7 @@ section.dashboard
                   .task__stats
                     span
                       time(datetime=task.fecha_finalizacion)
-                        i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
+                        i.fas.fa-flag #{new Date(task.fecha_finalizacion).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })}
                     span.task__owner
                       i.fas.fa-check(data-task-id=task.id, class=task.estatus === 'Done' ? 'checked' : '')
 
@@ -95,7 +95,7 @@ section.dashboard
       label(for="descripcion") Description:
       textarea(placeholder="Description", maxlength="100", name="descripcion" required)
       br
-      label(for="fecha") Due to:
+      label(for="fecha") Due date:
       input(type="date", id="fecha_finalizacion", name="fecha_finalizacion" required)
       br
       label(for="importancia") Select priority:
@@ -115,7 +115,7 @@ section.dashboard
       label(for="edit-descripcion") Description:
       textarea(placeholder="Description", id="edit-descripcion", maxlength="100", name="descripcion", required)
       br
-      label(for="edit-fecha_finalizacion") Due to:
+      label(for="edit-fecha_finalizacion") Due date:
       input(type="date", id="edit-fecha_finalizacion", name="fecha_finalizacion", required)
       br
       label(for="edit-importancia") Select priority:
